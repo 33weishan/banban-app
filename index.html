@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#111111">
-<title>伴伴｜活動陪同媒合平台 Prototype 0.3</title>
+<title>伴伴｜活動陪同媒合平台 Prototype 0.4</title>
 <style>
 :root{
   --bg:#f7f7f5;
@@ -110,6 +110,7 @@ button{cursor:pointer}
 .form{display:grid;gap:12px}
 .field label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
 .field input,.field select,.field textarea{width:100%;border:1px solid var(--line);background:#fff;border-radius:14px;padding:13px;outline:none}
+#placeAutocompleteHost gmp-place-autocomplete{display:block;width:100%;min-height:52px;border:1px solid var(--line);background:#fff;border-radius:14px;padding:4px}
 .summary{background:#f6f6f3;border-radius:18px;padding:14px;margin:14px 0}
 .sumrow{display:flex;justify-content:space-between;margin:8px 0}
 .sumrow.total{font-weight:800;font-size:18px;border-top:1px solid var(--line);padding-top:12px;margin-top:12px}
@@ -138,7 +139,7 @@ button{cursor:pointer}
 <div class="app">
   <div class="topbar">
     <div class="brand">伴伴</div>
-    <div class="badge">Prototype 0.3</div>
+    <div class="badge">Prototype 0.4</div>
   </div>
 
   <main id="customerView">
@@ -262,10 +263,13 @@ button{cursor:pointer}
       </div>
       <div class="field">
         <label>公開碰面地點</label>
-        <input id="placeSearch" type="text" placeholder="搜尋餐廳、咖啡廳、商場、捷運站等公開場所" autocomplete="off">
+        <div id="placeAutocompleteHost"></div>
+        <div id="placeStatus" class="notice" style="margin-top:7px">請從 Google 建議清單中選擇公開場所。</div>
         <div class="notice" style="margin-top:7px">僅限公共場所。私人住宅、住家地址、房號或私人空間無法作為碰面地點。</div>
-        <div id="placeSuggestions" style="display:grid;gap:8px;margin-top:10px"></div>
+        <div id="selectedPlaceCard" style="margin-top:10px"></div>
         <input id="selectedPlace" type="hidden" value="">
+        <input id="selectedPlaceAddress" type="hidden" value="">
+        <input id="selectedPlaceId" type="hidden" value="">
       </div>
       <div class="summary">
         <div class="sumrow"><span>陪同服務費</span><b id="serviceFee">NT$0</b></div>
@@ -359,9 +363,10 @@ function openBooking(){
   closeSheet('profileSheet');
   document.getElementById('bookingName').textContent=currentProvider.name;
   document.getElementById('bookDate').value=document.getElementById('searchDate').value;
-  document.getElementById('placeSearch').value='';
-  document.getElementById('selectedPlace').value='';
-  document.getElementById('placeSuggestions').innerHTML='';
+  clearSelectedPlace();
+  const ac=document.querySelector('#placeAutocompleteHost gmp-place-autocomplete');
+  if(ac) ac.value='';
+  setPlaceStatus('請從 Google 建議清單中選擇公開場所。');
   updatePrice();
   document.getElementById('bookingSheet').classList.add('show');
 }
@@ -379,10 +384,6 @@ function updatePrice(){
 function goPayment(){
   const d=document.getElementById('bookDate').value;
   if(!d){toast('請先選擇日期');return}
-  if(!document.getElementById('selectedPlace').value){
-    showPlaceWarning();
-    return;
-  }
   if(!document.getElementById('selectedPlace').value){
     showPlaceWarning();
     return;
@@ -443,146 +444,63 @@ function toast(msg){
 }
 
 
-function looksResidential(value){
-  const v=(value||'').trim();
-  if(!v) return false;
-  const blockedWords=['我家','住家','住宅','民宅','家裡','套房','公寓','社區','房號','室','樓'];
-  if(blockedWords.some(w=>v.includes(w))) return true;
-  // Typical raw street address pattern without a recognized public place selection.
-  if(/(路|街|巷|弄).*(號|樓|室)/.test(v)) return true;
-  return false;
-}
 
-function showPlaceWarning(){
-  document.getElementById('placeWarningSheet').classList.add('show');
-}
-
-
-document.getElementById('placeSearch').addEventListener('input', (e)=>{
-  document.getElementById('selectedPlace').value='';
-  renderPlaceSuggestions(e.target.value);
-});
-
-
-const GOOGLE_MAPS_API_KEY = 'AIzaSyABw93o56wJvAQhqdpI_HwPNOZtZwoDCSI';
-
-const blockedResidentialKeywords = [
-  '我家','住家','住宅','民宅','家裡','套房','公寓','社區','房號'
-];
-
-const allowedPlaceTypes = new Set([
-  'restaurant','cafe','coffee_shop','shopping_mall','department_store',
-  'movie_theater','museum','tourist_attraction','park','plaza',
-  'subway_station','train_station','transit_station','bus_station',
-  'library','university','stadium','performing_arts_theater',
-  'convention_center','event_venue','market','store','book_store',
-  'bakery','bar','bowling_alley','amusement_center','art_gallery',
-  'cultural_center','hotel','lodging'
-]);
+const GOOGLE_MAPS_API_KEY = 'YOUR_GOOGLE_MAPS_API_KEY';
+const blockedResidentialKeywords=['我家','住家','住宅','民宅','家裡','套房','公寓','社區','房號'];
 
 function looksResidential(value){
   const v=(value||'').trim();
-  if(!v) return false;
-  if(blockedResidentialKeywords.some(w=>v.includes(w))) return true;
-  if(/(路|街|巷|弄).*(號|樓|室)/.test(v) &&
-     !/(咖啡|餐廳|百貨|商場|影城|捷運|車站|博物館|公園|展覽|書店|飯店|酒店|大廳)/.test(v)) return true;
-  return false;
+  if(!v)return false;
+  if(blockedResidentialKeywords.some(w=>v.includes(w)))return true;
+  return /(路|街|巷|弄).*(號|樓|室)/.test(v) &&
+    !/(咖啡|餐廳|百貨|商場|影城|捷運|車站|博物館|公園|展覽|書店|飯店|酒店|大廳|廣場|市場)/.test(v);
 }
-
-function showPlaceWarning(){
-  const w=document.getElementById('placeWarningSheet');
-  if(w) w.classList.add('show');
-}
-
-function setPlaceStatus(msg){
-  const el=document.getElementById('placeStatus');
-  if(el) el.textContent=msg || '';
-}
-
+function showPlaceWarning(){document.getElementById('placeWarningSheet')?.classList.add('show')}
+function setPlaceStatus(msg){const e=document.getElementById('placeStatus');if(e)e.textContent=msg||''}
 function clearSelectedPlace(){
-  const ids=['selectedPlace','selectedPlaceAddress','selectedPlaceId'];
-  ids.forEach(id=>{const el=document.getElementById(id); if(el) el.value='';});
-  const card=document.getElementById('selectedPlaceCard');
-  if(card) card.innerHTML='';
+  ['selectedPlace','selectedPlaceAddress','selectedPlaceId'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});
+  const c=document.getElementById('selectedPlaceCard');if(c)c.innerHTML='';
 }
-
-function isPublicPlace(place){
-  const types = place.types || [];
-  if(place.primaryType && allowedPlaceTypes.has(place.primaryType)) return true;
-  return types.some(t=>allowedPlaceTypes.has(t));
-}
-
+function esc(v){return String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
 function renderSelectedPlace(place){
-  const name=place.displayName?.text || place.displayName || place.name || '';
-  const address=place.formattedAddress || place.formatted_address || '';
-  const type=place.primaryType || (place.types && place.types[0]) || '公開場所';
-
+  const name=place.displayName||'',address=place.formattedAddress||'';
   document.getElementById('selectedPlace').value=name;
   document.getElementById('selectedPlaceAddress').value=address;
-  document.getElementById('selectedPlaceId').value=place.id || place.place_id || '';
-  document.getElementById('placeSearch').value=name;
-  document.getElementById('selectedPlaceCard').innerHTML=`
-    <div class="infoBox">
-      <small>已選擇公開場所 ✓</small>
-      <b>${name}</b>
-      <div class="meta">${address}${type ? ' · '+type : ''}</div>
-    </div>`;
+  document.getElementById('selectedPlaceId').value=place.id||'';
+  document.getElementById('selectedPlaceCard').innerHTML=`<div class="infoBox"><small>已從 Google Maps 選擇公開場所 ✓</small><b>${esc(name)}</b><div class="meta">${esc(address)}</div></div>`;
   setPlaceStatus('');
 }
-
-function initGooglePlaces(){
-  const input=document.getElementById('placeSearch');
-  if(!input) return;
-  setPlaceStatus('Google 公開地點搜尋已啟用。');
-
-  const autocomplete = new google.maps.places.Autocomplete(input,{
-    fields:['place_id','name','formatted_address','types','geometry'],
-    componentRestrictions:{country:'tw'}
-  });
-
-  autocomplete.addListener('place_changed',()=>{
-    clearSelectedPlace();
-    const p=autocomplete.getPlace();
-    const typed=(p.name || '')+' '+(p.formatted_address || '');
-
-    if(!p.place_id){
-      setPlaceStatus('請從 Google 地點建議清單中選擇一個公開場所。');
-      return;
-    }
-    if(looksResidential(typed) || !isPublicPlace(p)){
-      input.value='';
-      showPlaceWarning();
-      setPlaceStatus('此地點不符合公共場所規則，請重新選擇。');
-      return;
-    }
-    renderSelectedPlace(p);
-  });
-
-  input.addEventListener('input',()=>{
-    clearSelectedPlace();
-    if(looksResidential(input.value)){
-      setPlaceStatus('偵測到疑似私人住宅／住家地址，不能作為碰面地點。');
-    }else{
-      setPlaceStatus('請從 Google 建議清單中選擇公開場所。');
-    }
-  });
+async function initGooglePlaces(){
+  const host=document.getElementById('placeAutocompleteHost');if(!host)return;
+  try{
+    const {PlaceAutocompleteElement}=await google.maps.importLibrary('places');
+    const autocomplete=new PlaceAutocompleteElement({includedRegionCodes:['tw']});
+    autocomplete.placeholder='搜尋餐廳、咖啡廳、商場、捷運站等公開場所';
+    host.replaceChildren(autocomplete);
+    autocomplete.addEventListener('gmp-select',async(event)=>{
+      clearSelectedPlace();
+      try{
+        const place=event.placePrediction.toPlace();
+        await place.fetchFields({fields:['id','displayName','formattedAddress','location','types','primaryType']});
+        if(looksResidential(`${place.displayName||''} ${place.formattedAddress||''}`)){
+          autocomplete.value='';showPlaceWarning();setPlaceStatus('此地點疑似私人住宅，請重新選擇公開場所。');return;
+        }
+        renderSelectedPlace(place);
+      }catch(e){console.error(e);setPlaceStatus('無法讀取這個 Google 地點，請重新選擇。')}
+    });
+    autocomplete.addEventListener('gmp-error',()=>setPlaceStatus('Google 地點搜尋發生錯誤，請確認 API Key 與 Places API (New) 設定。'));
+    setPlaceStatus('Google 公開地點搜尋已啟用，請從建議清單中選擇。');
+  }catch(e){console.error(e);setPlaceStatus('Google 地點服務載入失敗，請確認 API 設定。')}
 }
-
 function loadGoogleMapsPlaces(){
-  if(!GOOGLE_MAPS_API_KEY || GOOGLE_MAPS_API_KEY==='AIzaSyABw93o56wJvAQhqdpI_HwPNOZtZwoDCSI'){
-    setPlaceStatus('尚未填入 Google Maps API Key。');
-    return;
-  }
+  if(!GOOGLE_MAPS_API_KEY||GOOGLE_MAPS_API_KEY==='YOUR_GOOGLE_MAPS_API_KEY'){setPlaceStatus('尚未填入 Google Maps API Key。');return}
   window.__banbanMapsReady=initGooglePlaces;
   const s=document.createElement('script');
-  s.src=`https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GOOGLE_MAPS_API_KEY)}&libraries=places&v=weekly&callback=__banbanMapsReady`;
-  s.async=true;
-  s.defer=true;
-  s.onerror=()=>setPlaceStatus('Google 地點服務載入失敗，請確認 API Key 與限制設定。');
+  s.src=`https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GOOGLE_MAPS_API_KEY)}&v=weekly&loading=async&callback=__banbanMapsReady`;
+  s.async=true;s.onerror=()=>setPlaceStatus('Google 地點服務載入失敗，請確認 API Key 與限制設定。');
   document.head.appendChild(s);
 }
-
-document.addEventListener('DOMContentLoaded', loadGoogleMapsPlaces);
+document.addEventListener('DOMContentLoaded',loadGoogleMapsPlaces);
 
 const today=new Date();
 document.getElementById('searchDate').value=today.toISOString().slice(0,10);
