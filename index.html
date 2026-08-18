@@ -445,7 +445,7 @@ function toast(msg){
 
 
 
-const GOOGLE_MAPS_API_KEY = 'YOUR_GOOGLE_MAPS_API_KEY';
+const GOOGLE_MAPS_API_KEY = 'AIzaSyABw93o56wJvAQhqdpI_HwPNOZtZwoDCSI';
 const blockedResidentialKeywords=['我家','住家','住宅','民宅','家裡','套房','公寓','社區','房號'];
 
 function looksResidential(value){
@@ -493,7 +493,7 @@ async function initGooglePlaces(){
   }catch(e){console.error(e);setPlaceStatus('Google 地點服務載入失敗，請確認 API 設定。')}
 }
 function loadGoogleMapsPlaces(){
-  if(!GOOGLE_MAPS_API_KEY||GOOGLE_MAPS_API_KEY==='YOUR_GOOGLE_MAPS_API_KEY'){setPlaceStatus('尚未填入 Google Maps API Key。');return}
+  if(!GOOGLE_MAPS_API_KEY||GOOGLE_MAPS_API_KEY==='AIzaSyABw93o56wJvAQhqdpI_HwPNOZtZwoDCSI'){setPlaceStatus('尚未填入 Google Maps API Key。');return}
   window.__banbanMapsReady=initGooglePlaces;
   const s=document.createElement('script');
   s.src=`https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GOOGLE_MAPS_API_KEY)}&v=weekly&loading=async&callback=__banbanMapsReady`;
