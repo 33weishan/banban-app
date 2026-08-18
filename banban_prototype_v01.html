@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<title>伴伴｜活動陪同媒合平台 Prototype</title>
+<style>
+:root{
+  --bg:#f7f7f5;
+  --card:#ffffff;
+  --text:#171717;
+  --muted:#737373;
+  --line:#e8e8e5;
+  --accent:#111111;
+  --soft:#efefec;
+  --danger:#b42318;
+  --success:#16794b;
+  --radius:22px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto Sans TC",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.app{max-width:480px;margin:0 auto;min-height:100vh;background:var(--bg);padding-bottom:92px}
+.topbar{
+  position:sticky;top:0;z-index:20;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 18px;background:rgba(247,247,245,.92);backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(232,232,229,.9)
+}
+.brand{font-weight:800;font-size:22px;letter-spacing:-.6px}
+.badge{font-size:12px;padding:6px 9px;border-radius:999px;background:#fff;border:1px solid var(--line)}
+.section{padding:18px}
+.hero{
+  background:linear-gradient(160deg,#111,#353535);
+  color:white;border-radius:28px;padding:24px;margin-top:6px;
+  box-shadow:0 16px 36px rgba(0,0,0,.12)
+}
+.hero h1{font-size:31px;line-height:1.08;margin:0 0 10px}
+.hero p{margin:0;color:#d8d8d8;font-size:14px;line-height:1.55}
+.searchbox{
+  margin-top:18px;background:white;padding:10px;border-radius:18px;display:grid;grid-template-columns:1fr 1fr;gap:8px
+}
+.searchbox select,.searchbox input{
+  min-width:0;border:0;background:#f2f2f0;border-radius:12px;padding:12px;color:#222;outline:none
+}
+.searchbox button{grid-column:1/-1;border:0;background:#111;color:#fff;border-radius:13px;padding:13px;font-weight:700}
+.rowtitle{display:flex;align-items:end;justify-content:space-between;margin:22px 0 12px}
+.rowtitle h2{font-size:20px;margin:0}
+.rowtitle span{font-size:13px;color:var(--muted)}
+.cards{display:grid;gap:14px}
+.card{
+  background:var(--card);border-radius:var(--radius);overflow:hidden;border:1px solid var(--line)
+}
+.photo{
+  height:230px;background:
+    radial-gradient(circle at 70% 20%,rgba(255,255,255,.55),transparent 22%),
+    linear-gradient(135deg,#d7c5b4,#9d8b7a 55%,#6f6257);
+  display:flex;align-items:flex-end;position:relative;padding:14px;color:#fff
+}
+.photo.alt2{background:linear-gradient(135deg,#c9d1dc,#8d9baa 55%,#5c6673)}
+.photo.alt3{background:linear-gradient(135deg,#e1c9cf,#b88795 55%,#785866)}
+.photo .initial{font-size:74px;font-weight:800;opacity:.9;position:absolute;right:18px;top:38px}
+.verified{font-size:12px;background:rgba(0,0,0,.42);padding:6px 9px;border-radius:999px;backdrop-filter:blur(8px)}
+.cardbody{padding:15px}
+.nameRow{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.nameRow h3{margin:0;font-size:20px}
+.rate{font-size:14px}
+.meta{font-size:13px;color:var(--muted);margin-top:5px}
+.tags{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}
+.tag{padding:7px 9px;border-radius:999px;background:var(--soft);font-size:12px}
+.priceRow{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+.price{font-weight:800}
+.primary,.secondary,.dangerBtn{
+  border:0;border-radius:14px;padding:12px 15px;font-weight:700
+}
+.primary{background:#111;color:#fff}
+.secondary{background:var(--soft);color:#111}
+.dangerBtn{background:#fdeceb;color:var(--danger)}
+.nav{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:min(480px,100%);display:grid;grid-template-columns:repeat(3,1fr);
+  padding:10px 8px calc(10px + env(safe-area-inset-bottom));
+  background:rgba(255,255,255,.96);backdrop-filter:blur(16px);border-top:1px solid var(--line);z-index:40
+}
+.nav button{border:0;background:none;padding:8px 4px;color:#888;font-size:12px}
+.nav button.active{color:#111;font-weight:800}
+.nav .ico{display:block;font-size:20px;margin-bottom:2px}
+.sheet{
+  display:none;position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.42);align-items:flex-end;justify-content:center
+}
+.sheet.show{display:flex}
+.sheetPanel{
+  width:min(480px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:28px 28px 0 0;padding:20px 18px calc(26px + env(safe-area-inset-bottom))
+}
+.sheetHead{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.sheetHead h2{margin:0;font-size:22px}
+.close{border:0;background:var(--soft);width:36px;height:36px;border-radius:50%;font-size:18px}
+.profileHero{height:190px;border-radius:22px;background:linear-gradient(135deg,#d7c5b4,#6f6257);margin:15px 0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:80px;font-weight:800}
+.infoGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.infoBox{background:var(--soft);border-radius:16px;padding:12px}
+.infoBox small{display:block;color:var(--muted);margin-bottom:3px}
+.hr{height:1px;background:var(--line);margin:18px 0}
+.form{display:grid;gap:12px}
+.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);background:#fff;border-radius:14px;padding:13px;outline:none}
+.summary{background:#f6f6f3;border-radius:18px;padding:14px;margin:14px 0}
+.sumrow{display:flex;justify-content:space-between;margin:8px 0}
+.sumrow.total{font-weight:800;font-size:18px;border-top:1px solid var(--line);padding-top:12px;margin-top:12px}
+.notice{font-size:12px;line-height:1.5;color:var(--muted);margin-top:10px}
+.full{width:100%}
+.providerPanel{padding:18px}
+.statGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:white;border:1px solid var(--line);border-radius:18px;padding:16px}
+.stat .num{font-size:24px;font-weight:800}
+.booking{background:white;border:1px solid var(--line);border-radius:18px;padding:15px;margin-top:12px}
+.bookingTop{display:flex;justify-content:space-between;gap:10px}
+.booking h4{margin:0 0 5px}
+.booking p{margin:4px 0;color:var(--muted);font-size:13px}
+.actions{display:flex;gap:8px;margin-top:12px}
+.toast{
+  position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(20px);
+  background:#111;color:#fff;padding:12px 16px;border-radius:999px;font-size:13px;
+  opacity:0;pointer-events:none;transition:.25s;z-index:100;white-space:nowrap
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.empty{padding:34px 18px;text-align:center;color:var(--muted)}
+@media (min-width:481px){body{padding:16px 0}.app{border-radius:28px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.1)}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand">伴伴</div>
+    <div class="badge">Prototype 0.1</div>
+  </div>
+
+  <main id="customerView">
+    <div class="section">
+      <div class="hero">
+        <h1>今晚，找個人一起。</h1>
+        <p>聚餐、電影、展覽、唱歌、活動陪同。所有服務者皆須年滿 18 歲並完成真人驗證。</p>
+        <div class="searchbox">
+          <select id="city">
+            <option>台北</option><option>新北</option><option>桃園</option><option>台中</option><option>高雄</option>
+          </select>
+          <input id="searchDate" type="date">
+          <button onclick="filterProviders()">搜尋可預約服務者</button>
+        </div>
+      </div>
+
+      <div class="rowtitle">
+        <h2>今晚可預約</h2>
+        <span id="resultCount">3 位</span>
+      </div>
+      <div class="cards" id="providerCards"></div>
+    </div>
+  </main>
+
+  <main id="ordersView" style="display:none">
+    <div class="section">
+      <div class="rowtitle"><h2>我的預約</h2><span>示範資料</span></div>
+      <div id="ordersList" class="cards">
+        <div class="booking">
+          <div class="bookingTop"><div><h4>Mia｜聚餐陪同</h4><p>8/20 20:00–22:00 · 信義區</p></div><div class="badge">待確認</div></div>
+          <p>訂單金額 NT$3,080</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <main id="providerView" style="display:none">
+    <div class="providerPanel">
+      <div class="rowtitle"><h2>服務者工作台</h2><span>Amy</span></div>
+      <div class="statGrid">
+        <div class="stat"><small>今日收入</small><div class="num">NT$2,520</div></div>
+        <div class="stat"><small>本週完成</small><div class="num">8 單</div></div>
+      </div>
+
+      <div class="rowtitle"><h2>新預約</h2><span>1 筆</span></div>
+      <div class="booking" id="incomingBooking">
+        <div class="bookingTop">
+          <div><h4>王先生 · ★4.8</h4><p>8/20 20:00–22:00</p></div>
+          <div class="badge">新訂單</div>
+        </div>
+        <p>聚餐陪同 · 台北市信義區</p>
+        <p>2 小時 · 預估可得 NT$2,520</p>
+        <div class="actions">
+          <button class="primary" onclick="acceptBooking()">接受</button>
+          <button class="secondary" onclick="rejectBooking()">拒絕</button>
+        </div>
+      </div>
+
+      <div class="rowtitle"><h2>我的設定</h2><span>Demo</span></div>
+      <div class="booking">
+        <p><b>接單狀態：</b> 可接單</p>
+        <p><b>服務區域：</b> 台北市 / 新北市</p>
+        <p><b>基本價格：</b> NT$1,500 / HR</p>
+        <button class="secondary full" onclick="toast('第一版先保留為展示功能')">編輯服務設定</button>
+      </div>
+    </div>
+  </main>
+
+  <nav class="nav">
+    <button class="active" onclick="switchTab('customer',this)"><span class="ico">⌂</span>找陪同</button>
+    <button onclick="switchTab('orders',this)"><span class="ico">▤</span>我的預約</button>
+    <button onclick="switchTab('provider',this)"><span class="ico">◎</span>服務者端</button>
+  </nav>
+</div>
+
+<div class="sheet" id="profileSheet">
+  <div class="sheetPanel">
+    <div class="sheetHead"><h2 id="profileName"></h2><button class="close" onclick="closeSheet('profileSheet')">×</button></div>
+    <div class="profileHero" id="profileInitial"></div>
+    <div class="meta" id="profileMeta"></div>
+    <div class="tags" id="profileTags"></div>
+    <div class="infoGrid">
+      <div class="infoBox"><small>評價</small><b id="profileRating"></b></div>
+      <div class="infoBox"><small>完成預約</small><b id="profileDone"></b></div>
+      <div class="infoBox"><small>基本價格</small><b id="profilePrice"></b></div>
+      <div class="infoBox"><small>可預約</small><b>今晚</b></div>
+    </div>
+    <div class="hr"></div>
+    <h3>關於我</h3>
+    <p id="profileBio" style="line-height:1.7;color:#555"></p>
+    <button class="primary full" onclick="openBooking()">立即預約</button>
+  </div>
+</div>
+
+<div class="sheet" id="bookingSheet">
+  <div class="sheetPanel">
+    <div class="sheetHead"><h2>預約 <span id="bookingName"></span></h2><button class="close" onclick="closeSheet('bookingSheet')">×</button></div>
+    <div class="form" style="margin-top:16px">
+      <div class="field">
+        <label>活動類型</label>
+        <select id="activity" onchange="updatePrice()">
+          <option>聚餐陪同</option><option>電影陪同</option><option>展覽陪同</option><option>唱歌</option><option>逛街</option><option>公開活動陪同</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>日期</label>
+        <input id="bookDate" type="date">
+      </div>
+      <div class="field">
+        <label>開始時間</label>
+        <input id="bookTime" type="time" value="20:00">
+      </div>
+      <div class="field">
+        <label>時數</label>
+        <select id="hours" onchange="updatePrice()">
+          <option value="1">1 小時</option>
+          <option value="2" selected>2 小時</option>
+          <option value="3">3 小時</option>
+          <option value="4">4 小時</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>碰面區域</label>
+        <select id="area">
+          <option>台北市信義區</option><option>台北市大安區</option><option>台北市中山區</option><option>台北市松山區</option>
+        </select>
+      </div>
+      <div class="summary">
+        <div class="sumrow"><span>陪同服務費</span><b id="serviceFee">NT$0</b></div>
+        <div class="sumrow"><span>平台服務費 10%</span><b id="platformFee">NT$0</b></div>
+        <div class="sumrow total"><span>付款總額</span><span id="totalFee">NT$0</span></div>
+      </div>
+      <div class="notice">本 Prototype 僅展示合法活動陪同媒合流程，不含真實付款。平台禁止色情服務、性交易及其他違法交易。</div>
+      <button class="primary full" onclick="goPayment()">送出預約</button>
+    </div>
+  </div>
+</div>
+
+<div class="sheet" id="paymentSheet">
+  <div class="sheetPanel">
+    <div class="sheetHead"><h2>確認付款</h2><button class="close" onclick="closeSheet('paymentSheet')">×</button></div>
+    <div class="summary" style="margin-top:18px">
+      <div class="sumrow"><span>服務者</span><b id="payName"></b></div>
+      <div class="sumrow"><span>活動</span><b id="payActivity"></b></div>
+      <div class="sumrow"><span>時間</span><b id="payTime"></b></div>
+      <div class="sumrow total"><span>應付總額</span><span id="payTotal"></span></div>
+    </div>
+    <div class="field">
+      <label>付款方式</label>
+      <select><option>信用卡（模擬）</option><option>Apple Pay（未串接）</option></select>
+    </div>
+    <button class="primary full" style="margin-top:16px" onclick="completePayment()">模擬付款並建立訂單</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const providers = [
+  {id:1,name:'Mia',age:24,city:'台北',rating:4.9,done:126,price:1400,initial:'M',cls:'',tags:['聚餐','電影','展覽','逛街'],bio:'喜歡美食、電影和城市散步。個性健談，適合第一次參加活動或單純想找人一起吃飯聊天。'},
+  {id:2,name:'Amy',age:26,city:'台北',rating:4.8,done:98,price:1500,initial:'A',cls:'alt2',tags:['聚餐','唱歌','聚會','活動'],bio:'喜歡音樂和聚會，也常參加展覽及品牌活動。重視時間觀念與彼此尊重。'},
+  {id:3,name:'Nana',age:25,city:'台北',rating:5.0,done:72,price:1600,initial:'N',cls:'alt3',tags:['電影','展覽','商務活動','聚餐'],bio:'比較安靜但很好聊，喜歡藝術、咖啡和電影。也可以陪同參加正式活動或商務場合。'}
+];
+let currentProvider = providers[0];
+
+function renderProviders(list=providers){
+  const wrap=document.getElementById('providerCards');
+  wrap.innerHTML=list.map(p=>`
+    <div class="card">
+      <div class="photo ${p.cls}"><div class="initial">${p.initial}</div><span class="verified">✓ 真人認證</span></div>
+      <div class="cardbody">
+        <div class="nameRow"><h3>${p.name} · ${p.age}</h3><div class="rate">★ ${p.rating}</div></div>
+        <div class="meta">📍 ${p.city} · 今晚可預約 · 完成 ${p.done} 次</div>
+        <div class="tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+        <div class="priceRow">
+          <div><span class="price">NT$${p.price.toLocaleString()}</span><span class="meta"> / HR</span></div>
+          <button class="primary" onclick="openProfile(${p.id})">查看資料</button>
+        </div>
+      </div>
+    </div>`).join('');
+  document.getElementById('resultCount').textContent=list.length+' 位';
+}
+
+function openProfile(id){
+  currentProvider=providers.find(p=>p.id===id);
+  document.getElementById('profileName').textContent=currentProvider.name+' ✓';
+  document.getElementById('profileInitial').textContent=currentProvider.initial;
+  document.getElementById('profileMeta').textContent=`${currentProvider.age}歲｜${currentProvider.city}｜真人認證`;
+  document.getElementById('profileTags').innerHTML=currentProvider.tags.map(t=>`<span class="tag">${t}</span>`).join('');
+  document.getElementById('profileRating').textContent='★ '+currentProvider.rating;
+  document.getElementById('profileDone').textContent=currentProvider.done+' 次';
+  document.getElementById('profilePrice').textContent='NT$'+currentProvider.price.toLocaleString()+'/HR';
+  document.getElementById('profileBio').textContent=currentProvider.bio;
+  document.getElementById('profileSheet').classList.add('show');
+}
+
+function openBooking(){
+  closeSheet('profileSheet');
+  document.getElementById('bookingName').textContent=currentProvider.name;
+  document.getElementById('bookDate').value=document.getElementById('searchDate').value;
+  updatePrice();
+  document.getElementById('bookingSheet').classList.add('show');
+}
+function closeSheet(id){document.getElementById(id).classList.remove('show')}
+
+function updatePrice(){
+  const h=Number(document.getElementById('hours').value);
+  const base=currentProvider.price*h;
+  const pf=Math.round(base*0.10);
+  document.getElementById('serviceFee').textContent='NT$'+base.toLocaleString();
+  document.getElementById('platformFee').textContent='NT$'+pf.toLocaleString();
+  document.getElementById('totalFee').textContent='NT$'+(base+pf).toLocaleString();
+}
+
+function goPayment(){
+  const d=document.getElementById('bookDate').value;
+  if(!d){toast('請先選擇日期');return}
+  document.getElementById('payName').textContent=currentProvider.name;
+  document.getElementById('payActivity').textContent=document.getElementById('activity').value;
+  document.getElementById('payTime').textContent=
+    document.getElementById('bookDate').value+' '+document.getElementById('bookTime').value+' · '+document.getElementById('hours').value+'小時';
+  document.getElementById('payTotal').textContent=document.getElementById('totalFee').textContent;
+  closeSheet('bookingSheet');
+  document.getElementById('paymentSheet').classList.add('show');
+}
+
+function completePayment(){
+  const name=currentProvider.name;
+  const activity=document.getElementById('activity').value;
+  const time=document.getElementById('bookTime').value;
+  const hours=document.getElementById('hours').value;
+  const area=document.getElementById('area').value;
+  const total=document.getElementById('totalFee').textContent;
+  const item=document.createElement('div');
+  item.className='booking';
+  item.innerHTML=`<div class="bookingTop"><div><h4>${name}｜${activity}</h4><p>${document.getElementById('bookDate').value} ${time} · ${hours}小時 · ${area}</p></div><div class="badge">待服務者確認</div></div><p>訂單金額 ${total}</p>`;
+  document.getElementById('ordersList').prepend(item);
+  closeSheet('paymentSheet');
+  toast('預約已建立（模擬）');
+  setTimeout(()=>switchTab('orders',document.querySelectorAll('.nav button')[1]),450);
+}
+
+function filterProviders(){
+  const city=document.getElementById('city').value;
+  const list=providers.filter(p=>p.city===city);
+  renderProviders(list.length?list:[]);
+  if(!list.length) toast('目前此城市尚無示範服務者');
+}
+
+function switchTab(tab,btn){
+  ['customerView','ordersView','providerView'].forEach(id=>document.getElementById(id).style.display='none');
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  if(tab==='customer')document.getElementById('customerView').style.display='block';
+  if(tab==='orders')document.getElementById('ordersView').style.display='block';
+  if(tab==='provider')document.getElementById('providerView').style.display='block';
+  if(btn)btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function acceptBooking(){
+  document.getElementById('incomingBooking').innerHTML='<h4>已接受預約 ✓</h4><p>8/20 20:00–22:00 · 聚餐陪同 · 信義區</p><div class="badge">已確認</div>';
+  toast('已接受這筆預約');
+}
+function rejectBooking(){
+  document.getElementById('incomingBooking').innerHTML='<div class="empty">目前沒有新的預約</div>';
+  toast('已拒絕這筆預約');
+}
+function toast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(window._toast);window._toast=setTimeout(()=>t.classList.remove('show'),1800);
+}
+const today=new Date();
+document.getElementById('searchDate').value=today.toISOString().slice(0,10);
+document.getElementById('bookDate').value=today.toISOString().slice(0,10);
+renderProviders();
+</script>
+</body>
+</html>
