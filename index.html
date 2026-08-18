@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#111111">
-<title>伴伴｜活動陪同媒合平台 Prototype 0.5</title>
+<title>伴伴｜活動陪同媒合平台 Prototype 0.6 診斷版</title>
 <style>
 :root{
   --bg:#f7f7f5;
@@ -139,7 +139,7 @@ button{cursor:pointer}
 <div class="app">
   <div class="topbar">
     <div class="brand">伴伴</div>
-    <div class="badge">Prototype 0.5</div>
+    <div class="badge">Prototype 0.6 診斷版</div>
   </div>
 
   <main id="customerView">
@@ -445,7 +445,7 @@ function toast(msg){
 
 
 
-const GOOGLE_MAPS_API_KEY = 'AIzaSyABw93o56wJvAQhqdpI_HwPNOZtZwoDCSI';
+const GOOGLE_MAPS_API_KEY = 'YOUR_GOOGLE_MAPS_API_KEY';
 const blockedResidentialKeywords=['我家','住家','住宅','民宅','家裡','套房','公寓','社區','房號'];
 
 function looksResidential(value){
@@ -493,11 +493,11 @@ async function initGooglePlaces(){
   }catch(e){console.error(e);setPlaceStatus('Google 地點服務載入失敗，請確認 API 設定。')}
 }
 function loadGoogleMapsPlaces(){
-  if(!GOOGLE_MAPS_API_KEY||GOOGLE_MAPS_API_KEY==='AIzaSyABw93o56wJvAQhqdpI_HwPNOZtZwoDCSI'){setPlaceStatus('尚未填入 Google Maps API Key。');return}
+  if(!GOOGLE_MAPS_API_KEY||GOOGLE_MAPS_API_KEY==='YOUR_GOOGLE_MAPS_API_KEY'){setPlaceStatus('尚未填入 Google Maps API Key。');return}
   window.__banbanMapsReady=initGooglePlaces;
   const s=document.createElement('script');
   s.src=`https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GOOGLE_MAPS_API_KEY)}&v=weekly&loading=async&libraries=places&callback=__banbanMapsReady`;
-  s.async=true;s.onerror=()=>setPlaceStatus('Google 地點服務載入失敗，請確認 API Key 與限制設定。');
+  s.async=true;s.onerror=()=>{window.__mapsDiagShow&&window.__mapsDiagShow('❌ Google Maps script 載入失敗');setPlaceStatus('Google 地點服務載入失敗，請確認 API Key 與限制設定。');
   document.head.appendChild(s);
 }
 document.addEventListener('DOMContentLoaded',loadGoogleMapsPlaces);
@@ -507,5 +507,44 @@ document.getElementById('searchDate').value=today.toISOString().slice(0,10);
 document.getElementById('bookDate').value=today.toISOString().slice(0,10);
 renderProviders();
 </script>
+
+<div id="mapsDiag" style="position:fixed;left:10px;right:10px;bottom:10px;z-index:99999;background:#111;color:#fff;padding:12px 14px;border-radius:14px;font:13px/1.45 -apple-system,BlinkMacSystemFont,sans-serif;max-height:34vh;overflow:auto;box-shadow:0 4px 20px rgba(0,0,0,.35)">
+  <b>Google 地點診斷</b>
+  <div id="mapsDiagText">正在檢查 Google Maps…</div>
+</div>
+<script>
+(function(){
+  const lines=[];
+  const box=()=>document.getElementById('mapsDiagText');
+  function show(msg){
+    lines.push(msg);
+    const el=box(); if(el) el.innerHTML=lines.map(x=>'• '+String(x).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))).join('<br>');
+  }
+  window.__mapsDiagShow=show;
+  window.gm_authFailure=function(){ show('❌ API 驗證失敗（API Key／網站限制／Billing）'); };
+  window.addEventListener('error', function(e){
+    const m=(e && e.message)||'未知 JavaScript 錯誤';
+    if(/google|maps|place|autocomplete|api/i.test(m)) show('❌ '+m);
+  });
+  window.addEventListener('unhandledrejection', function(e){
+    const r=e.reason; const m=(r && (r.message||String(r))) || '未知 Promise 錯誤';
+    if(/google|maps|place|autocomplete|api/i.test(m)) show('❌ '+m);
+  });
+  setTimeout(function(){
+    if(!window.google || !google.maps) show('❌ Google Maps JavaScript API 沒有成功載入');
+    else {
+      show('✅ Google Maps JavaScript API 已載入');
+      show('版本：'+(google.maps.version||'未知'));
+      try{
+        google.maps.importLibrary('places').then(function(lib){
+          show('✅ Places library 已載入');
+          show(lib && lib.PlaceAutocompleteElement ? '✅ PlaceAutocompleteElement 可用' : '❌ PlaceAutocompleteElement 不存在');
+        }).catch(function(err){ show('❌ Places library：'+(err.message||err)); });
+      }catch(err){ show('❌ importLibrary：'+(err.message||err)); }
+    }
+  },2500);
+})();
+</script>
+
 </body>
 </html>
