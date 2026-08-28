@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>539 分析大師 V2</title>
+<title>539 分析大師 V3.1｜官方資料準備版</title>
 <style>
 :root{--bg:#08101f;--card:#111c31;--card2:#172641;--line:#2b4167;--txt:#f3f7ff;--muted:#a8b8d3;--blue:#5c8dff;--green:#3bd59b;--gold:#ffc857;--red:#ff6b78}
 *{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#07101e,#0b1730);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft JhengHei",sans-serif}.wrap{max-width:1180px;margin:auto;padding:18px}h1{margin:4px 0 5px;font-size:29px}.sub{color:var(--muted);line-height:1.6}.tabs{display:flex;gap:8px;overflow:auto;padding:15px 0}.tab{white-space:nowrap;background:#182743;color:#cbd8ee}.tab.active{background:var(--blue);color:#fff}.panel{display:none}.panel.active{display:block}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.card{background:rgba(17,28,49,.97);border:1px solid var(--line);border-radius:18px;padding:17px;box-shadow:0 10px 25px #0003}.full{grid-column:1/-1}.card h2{font-size:18px;margin:0 0 12px}.note{background:#111c30;border:1px solid #344d78;border-radius:13px;padding:12px;color:#cad6e9;line-height:1.55;font-size:13px}label{display:block;color:var(--muted);font-size:13px;margin:9px 0 6px}input,textarea,select{width:100%;border:1px solid var(--line);border-radius:11px;background:#0b1528;color:#fff;padding:11px;font-size:15px}textarea{min-height:150px;font-family:Consolas,monospace}.row{display:flex;gap:9px;flex-wrap:wrap;margin-top:10px}button{border:0;border-radius:11px;padding:10px 14px;background:var(--blue);color:#fff;font-weight:750;cursor:pointer}.secondary{background:#273b60}.good{background:#168f67}.gold{background:#a87513}.danger{background:#a93b4c}.balls{display:flex;gap:7px;flex-wrap:wrap;margin:9px 0}.ball{width:43px;height:43px;border-radius:50%;display:grid;place-items:center;background:#f5f7ff;color:#101827;font-weight:900;border:3px solid #b8caff}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.kpi{background:var(--card2);border:1px solid var(--line);border-radius:13px;padding:11px}.kpi b{display:block;font-size:21px;margin-top:3px}.small{font-size:12px;color:var(--muted)}table{width:100%;border-collapse:collapse;margin-top:9px}th,td{padding:9px 6px;border-bottom:1px solid var(--line);text-align:center;font-size:13px}th{color:#b9c8e0}.report{background:#091426;border:1px solid var(--line);border-radius:12px;padding:13px;white-space:pre-wrap;line-height:1.65;min-height:100px}.ok{color:var(--green)}.bad{color:var(--red)}.warn{color:var(--gold)}.bar{height:9px;background:#0a1427;border-radius:9px;overflow:hidden;margin-top:5px}.fill{height:100%;background:var(--blue)}.checkgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.check{background:#152440;border:1px solid var(--line);border-radius:10px;padding:8px;font-size:12px}.disabled{opacity:.55}.footer{color:var(--muted);font-size:12px;line-height:1.6;margin:16px 3px}
@@ -10,8 +10,8 @@
 </style>
 </head>
 <body><div class="wrap">
-<h1>👑 539 分析大師 V2</h1>
-<div class="sub">統計評分 × 8碼推薦 × Wheeling 縮表 × 覆蓋率驗證 × 歷史回測 × 隨機對照 × 物理資料接口</div>
+<h1>👑 539 分析大師 V3.1｜官方資料準備版</h1>
+<div class="sub">官方歷史資料匯入 × 資料完整性檢查 × 固定核心5碼 × 固定主力8碼 × Wheeling × 回測</div>
 <div class="tabs">
 <button class="tab active" onclick="showTab('model',this)">🎯 選號模型</button>
 <button class="tab" onclick="showTab('wheel',this)">⚡ 縮表驗證</button>
@@ -20,11 +20,28 @@
 </div>
 
 <div id="model" class="panel active"><div class="grid">
+<section class="card full"><h2>⓪ 歷史資料庫（V3 核心）</h2>
+<div class="note">V3 不再把熱門／冷門號寫死。請貼入或匯入歷史開獎資料，每行一期 5 碼，日期由舊到新排列。系統會從這批資料重新計算近20／50／100期頻率、全期頻率、遺漏期數、尾數與前後期關聯。若沒有匯入資料，V3 不會假裝自己已分析歷史資料。</div>
+<label>歷史資料（每行一期 5 碼）</label>
+<textarea id="v3history" placeholder="例如：&#10;01 08 17 23 39&#10;02 04 09 12 36"></textarea>
+<div class="row"><button class="good" onclick="loadV3History()">載入並分析</button><button class="secondary" onclick="document.getElementById('historyFile').click()">匯入 TXT/CSV</button><input id="historyFile" type="file" accept=".txt,.csv" style="display:none" onchange="importHistoryFile(this)"></div>
+<div class="kpis" style="margin-top:10px">
+<div class="kpi"><span class="small">有效期數</span><b id="v3count">0</b></div>
+<div class="kpi"><span class="small">最新資料</span><b id="v3latest">—</b></div>
+<div class="kpi"><span class="small">重複列</span><b id="v3dupes">0</b></div>
+<div class="kpi"><span class="small">資料狀態</span><b id="v3state">未載入</b></div>
+</div>
+<div id="dataStatus" class="report" style="margin-top:10px">尚未載入歷史資料。選號功能會等待資料，不使用寫死的熱門號。</div>
+<div class="row">
+<button class="secondary" onclick="window.open('https://www.taiwanlottery.com/lotto/history/result_download/','_blank')">台彩官方年度資料</button>
+<button class="secondary" onclick="window.open('https://www.taiwanlottery.com/lotto/history/history_result/','_blank')">台彩官方歷史查詢</button>
+</div>
+</section>
 <section class="card"><h2>① 基準開獎號碼</h2>
 <label>上一期 5 碼</label><input id="lastDraw" value="02 04 09 12 36">
-<div class="row"><button onclick="generate()">產生 8 碼</button><button class="secondary" onclick="randomLast()">隨機填入</button></div>
-<div class="note" style="margin-top:12px">目前採「可解釋權重模型」。每顆球的分數來自：基礎分、熱門號、冷門號、尾數與前後期關聯。它是策略評分，不是下一期中獎機率。</div></section>
-<section class="card"><h2>② 推薦結果</h2><div class="small">8 碼基底</div><div id="base8" class="balls"></div><div class="small">由 8 碼抽出的展示 5 碼</div><div id="single5" class="balls"></div></section>
+<div class="row"><button onclick="generateV3()">計算固定主力 8 碼</button><button class="secondary" onclick="randomLast()">隨機填入測試</button></div>
+<div class="note" style="margin-top:12px">V3 使用你載入的歷史資料計分；同一份資料＋同一基準期，結果固定不變。分數是排序指標，不是中獎機率。</div></section>
+<section class="card"><h2>② 推薦結果</h2><div class="small">8 碼基底</div><div id="base8" class="balls"></div><div class="small">固定核心 5 碼（主力8碼中分數最高5顆）</div><div id="single5" class="balls"></div></section>
 <section class="card full"><h2>③ 1～39 號評分</h2><div id="scores"></div></section>
 </div></div>
 
@@ -58,7 +75,7 @@
 <textarea id="ballPhysics" placeholder="01,重量,磨損,位置&#10;02,重量,磨損,位置"></textarea></section>
 <section class="card full"><h2>物理模組狀態</h2><div id="physicsReport" class="report">未啟用。V2 不會用虛構重量、磨損或流場資料影響選號。</div></section>
 </div></div>
-<div class="footer">※ 本工具用於統計、組合與回測研究。隨機彩券每一組合法號碼在公平開獎下沒有因「熱門」「冷門」而天然提高下一期被抽中的機率。獎金欄位若使用，應以實際官方當期規則為準。</div>
+<div class="footer">※ V3.1 不會聲稱已自動連線台彩；目前採官方資料下載／查詢後匯入，避免瀏覽器跨網域或網站改版造成『看似更新、其實沒更新』。本工具用於統計、組合與回測研究。隨機彩券每一組合法號碼在公平開獎下沒有因「熱門」「冷門」而天然提高下一期被抽中的機率。獎金欄位若使用，應以實際官方當期規則為準。</div>
 </div>
 
 <script>
@@ -146,5 +163,100 @@ function physicsInfo(){
  let valid=rows.filter(r=>{let p=r.split(',');return p.length>=4&&Number(p[0])>=1&&Number(p[0])<=39&&!isNaN(Number(p[1]))&&!isNaN(Number(p[2]))}).length;
  document.getElementById('physicsReport').textContent=`開獎機編號：${machine||'未填'}\n氣流速度：${air||'未填'}\n混球時間：${mix||'未填'}\n有效球資料：${valid}/39 顆\n\n${machine&&air&&mix&&valid===39?'資料欄位已完整，但仍需要確認量測方法、單位、期別對應與流場資料，才能建立可驗證的物理模型。':'資料不足，因此物理模型維持停用，不影響目前統計模型。'}`
 }
-generate();
+/* V3 waits for real imported history data. */
+
+let V3_DRAWS=[];
+
+function importHistoryFile(input){
+ const f=input.files&&input.files[0]; if(!f)return;
+ const r=new FileReader();
+ r.onload=()=>{document.getElementById('v3history').value=r.result;loadV3History()};
+ r.readAsText(f,'utf-8');
+}
+function extractDraws(text){
+ const rows=[], seen=new Set(); let dupes=0, rejected=0;
+ text.split(/\n+/).forEach((line,idx)=>{
+   if(!line.trim())return;
+   let fields=line.split(/[,，;\t]+/).map(x=>x.trim());
+   let nums=[];
+   // safest case: exactly five whitespace/comma separated lottery numbers
+   let simple=(line.match(/(?<!\d)(?:[1-9]|[12][0-9]|3[0-9])(?!\d)/g)||[]).map(Number);
+   if(simple.length===5) nums=simple;
+   else {
+     // CSV fallback: find runs of five distinct integers in 1..39, favoring the rightmost run.
+     let vals=fields.map(x=>/^\d+$/.test(x)?Number(x):NaN);
+     for(let i=Math.max(0,vals.length-7);i<=vals.length-5;i++){
+       let cand=vals.slice(i,i+5);
+       if(cand.length===5&&cand.every(x=>Number.isInteger(x)&&x>=1&&x<=39)&&new Set(cand).size===5) nums=cand;
+     }
+   }
+   if(nums.length!==5){rejected++;return}
+   let key=nums.slice().sort((a,b)=>a-b).join('-')+'@'+idx; // keep same numbers if they occurred in different periods
+   rows.push({nums:nums.slice().sort((a,b)=>a-b), line:idx+1});
+ });
+ return {draws:rows.map(x=>x.nums),dupes,rejected};
+}
+function loadV3History(){
+ let parsed=extractDraws(document.getElementById('v3history').value), d=parsed.draws;
+ document.getElementById('v3count').textContent=d.length;
+ document.getElementById('v3dupes').textContent=parsed.dupes;
+ if(d.length<10){
+   V3_DRAWS=[];
+   document.getElementById('v3latest').textContent='—';
+   document.getElementById('v3state').textContent='資料不足';
+   document.getElementById('dataStatus').innerHTML='<span class="bad">可辨識的有效資料不足 10 期。</span>\n請確認每一期都有 5 個不同的 1～39 號碼。正式分析建議至少 100 期以上。';
+   return;
+ }
+ V3_DRAWS=d;
+ let latest=d[d.length-1].slice().sort((a,b)=>a-b);
+ document.getElementById('lastDraw').value=latest.map(x=>String(x).padStart(2,'0')).join(' ');
+ document.getElementById('v3latest').textContent=latest.map(x=>String(x).padStart(2,'0')).join(' ');
+ document.getElementById('v3state').textContent=d.length>=100?'可分析':'樣本偏少';
+ document.getElementById('dataStatus').innerHTML=`<span class="ok">✓ 已載入 ${d.length} 期有效開獎資料。</span>
+最新一列：${latest.join('、')}
+${parsed.rejected?`另有 ${parsed.rejected} 列無法辨識，已略過。`:''}
+資料順序必須由舊到新；V3.1 會把最後一列視為最新一期。`;
+}
+function countFreq(draws){
+ let c=Array(40).fill(0);draws.forEach(d=>d.forEach(n=>c[n]++));return c;
+}
+function v3Scores(last){
+ const N=V3_DRAWS.length, fAll=countFreq(V3_DRAWS), f20=countFreq(V3_DRAWS.slice(-20)),
+ f50=countFreq(V3_DRAWS.slice(-50)), f100=countFreq(V3_DRAWS.slice(-100));
+ let miss=Array(40).fill(N);
+ for(let n=1;n<=39;n++){for(let i=N-1;i>=0;i--){if(V3_DRAWS[i].includes(n)){miss[n]=N-1-i;break}}}
+ let trans=Array.from({length:40},()=>Array(40).fill(0)), denom=Array(40).fill(0);
+ for(let i=0;i<N-1;i++)V3_DRAWS[i].forEach(a=>{denom[a]++;V3_DRAWS[i+1].forEach(b=>trans[a][b]++)});
+ let tails=Array(10).fill(0);V3_DRAWS.forEach(d=>d.forEach(n=>tails[n%10]++));
+ const z=(v,arr)=>{let vals=arr.slice(1),m=vals.reduce((a,b)=>a+b,0)/vals.length,sd=Math.sqrt(vals.reduce((a,b)=>a+(b-m)**2,0)/vals.length)||1;return (v-m)/sd};
+ let raw=[];
+ for(let n=1;n<=39;n++){
+   let rel=0,relParts=[];
+   last.forEach(a=>{let rate=denom[a]?trans[a][n]/denom[a]:0;rel+=rate; if(rate>0)relParts.push(`${String(a).padStart(2,'0')}→${(rate*100).toFixed(1)}%`)});
+   rel/=Math.max(1,last.length);
+   let rec20=f20[n]/Math.max(1,Math.min(20,N)), rec50=f50[n]/Math.max(1,Math.min(50,N)), rec100=f100[n]/Math.max(1,Math.min(100,N)), all=fAll[n]/N;
+   let tailRate=tails[n%10]/(N*5);
+   // Deterministic ranking score; weights are transparent and editable in future versions.
+   let s=100 + 22*z(rec20,[0,...Array.from({length:39},(_,i)=>f20[i+1]/Math.max(1,Math.min(20,N)))])
+              +14*z(rec50,[0,...Array.from({length:39},(_,i)=>f50[i+1]/Math.max(1,Math.min(50,N)))])
+              +8*z(rec100,[0,...Array.from({length:39},(_,i)=>f100[i+1]/Math.max(1,Math.min(100,N)))])
+              +5*z(all,[0,...Array.from({length:39},(_,i)=>fAll[i+1]/N)])
+              +18*rel*10 + 3*tailRate*10;
+   raw.push({n,s,rec20,rec50,rec100,all,miss:miss[n],rel,relParts});
+ }
+ return raw.sort((a,b)=>b.s-a.s||a.n-b.n);
+}
+function generateV3(){
+ if(V3_DRAWS.length<10){alert('請先在最上方載入歷史資料。V3 不會用假資料代替。');return}
+ try{
+  let last=parse(document.getElementById('lastDraw').value,5),sc=v3Scores(last);
+  base8=sc.slice(0,8).map(x=>x.n).sort((a,b)=>a-b);
+  let core=sc.slice(0,5).map(x=>x.n).sort((a,b)=>a-b);
+  document.getElementById('base8').innerHTML=balls(base8);
+  document.getElementById('single5').innerHTML=balls(core);
+  document.getElementById('scores').innerHTML=`<table><tr><th>排名</th><th>號碼</th><th>總分</th><th>近20</th><th>近50</th><th>近100</th><th>遺漏</th><th>前後期關聯</th></tr>${sc.map((x,i)=>`<tr><td>${i+1}</td><td>${String(x.n).padStart(2,'0')}</td><td>${x.s.toFixed(1)}</td><td>${(x.rec20*100).toFixed(1)}%</td><td>${(x.rec50*100).toFixed(1)}%</td><td>${(x.rec100*100).toFixed(1)}%</td><td>${x.miss}期</td><td>${(x.rel*100).toFixed(2)}%</td></tr>`).join('')}</table>`;
+  buildWheel();
+ }catch(e){alert(e.message)}
+}
+
 </script></body></html>
