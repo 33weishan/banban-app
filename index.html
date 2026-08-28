@@ -2,34 +2,149 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>539 精算大師｜互動版</title>
+<title>539 分析大師 V2</title>
 <style>
-:root{--bg:#0b1020;--card:#131a2e;--card2:#19223b;--text:#eef2ff;--muted:#9aa6c4;--accent:#7c9cff;--good:#35c58a;--warn:#d79b23;--line:#2a3556;--danger:#ff6b7a}*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft JhengHei",sans-serif;background:linear-gradient(180deg,#090e1a,#0d1427);color:var(--text)}.wrap{max-width:1100px;margin:auto;padding:24px}h1{font-size:28px;margin:0 0 8px}.sub{color:var(--muted);margin-bottom:18px;line-height:1.6}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.card{background:#131a2e;border:1px solid var(--line);border-radius:18px;padding:18px}.full{grid-column:1/-1}.card h2{font-size:18px;margin:0 0 14px}label{display:block;color:var(--muted);font-size:13px;margin:8px 0 6px}input{width:100%;background:#0e1528;border:1px solid var(--line);border-radius:12px;color:var(--text);padding:12px;font-size:16px}.row{display:flex;gap:10px;flex-wrap:wrap}button{border:0;border-radius:12px;padding:11px 15px;font-size:15px;font-weight:700;cursor:pointer;background:var(--accent);color:white}button.secondary{background:#263454}button.good{background:#1e9f71}button.warn{background:#a57512}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}.kpi{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:12px}.kpi .v{font-size:22px;font-weight:800;margin-top:4px}.small{font-size:12px;color:var(--muted)}.numbers{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.ball{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:#eef2ff;color:#111827;font-weight:900;border:3px solid #c5d0ff}.bet-table{width:100%;border-collapse:collapse;margin-top:10px}.bet-table th,.bet-table td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:center}.bet-table th{color:#b9c4e2;font-size:13px}.tag{display:inline-block;padding:4px 8px;border-radius:999px;background:#20315f;color:#c9d5ff;font-size:12px}.notice{background:#191f33;border:1px solid #3a466e;border-radius:12px;padding:11px 13px;color:#cfd7ec;line-height:1.6;font-size:13px}.report{white-space:pre-wrap;background:#0d1426;border:1px solid var(--line);border-radius:12px;padding:14px;min-height:110px;line-height:1.7}.ok{color:var(--good)}.bad{color:var(--danger)}@media(max-width:760px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.kpis{grid-template-columns:1fr 1fr}.wrap{padding:14px}}
-</style></head>
+:root{--bg:#08101f;--card:#111c31;--card2:#172641;--line:#2b4167;--txt:#f3f7ff;--muted:#a8b8d3;--blue:#5c8dff;--green:#3bd59b;--gold:#ffc857;--red:#ff6b78}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#07101e,#0b1730);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft JhengHei",sans-serif}.wrap{max-width:1180px;margin:auto;padding:18px}h1{margin:4px 0 5px;font-size:29px}.sub{color:var(--muted);line-height:1.6}.tabs{display:flex;gap:8px;overflow:auto;padding:15px 0}.tab{white-space:nowrap;background:#182743;color:#cbd8ee}.tab.active{background:var(--blue);color:#fff}.panel{display:none}.panel.active{display:block}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.card{background:rgba(17,28,49,.97);border:1px solid var(--line);border-radius:18px;padding:17px;box-shadow:0 10px 25px #0003}.full{grid-column:1/-1}.card h2{font-size:18px;margin:0 0 12px}.note{background:#111c30;border:1px solid #344d78;border-radius:13px;padding:12px;color:#cad6e9;line-height:1.55;font-size:13px}label{display:block;color:var(--muted);font-size:13px;margin:9px 0 6px}input,textarea,select{width:100%;border:1px solid var(--line);border-radius:11px;background:#0b1528;color:#fff;padding:11px;font-size:15px}textarea{min-height:150px;font-family:Consolas,monospace}.row{display:flex;gap:9px;flex-wrap:wrap;margin-top:10px}button{border:0;border-radius:11px;padding:10px 14px;background:var(--blue);color:#fff;font-weight:750;cursor:pointer}.secondary{background:#273b60}.good{background:#168f67}.gold{background:#a87513}.danger{background:#a93b4c}.balls{display:flex;gap:7px;flex-wrap:wrap;margin:9px 0}.ball{width:43px;height:43px;border-radius:50%;display:grid;place-items:center;background:#f5f7ff;color:#101827;font-weight:900;border:3px solid #b8caff}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.kpi{background:var(--card2);border:1px solid var(--line);border-radius:13px;padding:11px}.kpi b{display:block;font-size:21px;margin-top:3px}.small{font-size:12px;color:var(--muted)}table{width:100%;border-collapse:collapse;margin-top:9px}th,td{padding:9px 6px;border-bottom:1px solid var(--line);text-align:center;font-size:13px}th{color:#b9c8e0}.report{background:#091426;border:1px solid var(--line);border-radius:12px;padding:13px;white-space:pre-wrap;line-height:1.65;min-height:100px}.ok{color:var(--green)}.bad{color:var(--red)}.warn{color:var(--gold)}.bar{height:9px;background:#0a1427;border-radius:9px;overflow:hidden;margin-top:5px}.fill{height:100%;background:var(--blue)}.checkgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.check{background:#152440;border:1px solid var(--line);border-radius:10px;padding:8px;font-size:12px}.disabled{opacity:.55}.footer{color:var(--muted);font-size:12px;line-height:1.6;margin:16px 3px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.kpis,.checkgrid{grid-template-columns:1fr 1fr}.wrap{padding:12px}}
+</style>
+</head>
 <body><div class="wrap">
-<h1>👑 539 精算大師｜互動版</h1>
-<div class="sub">大數據權重 × 拖牌矩陣 × 8碼推薦 × 立柱縮表 × CSV 匯出 × 對獎回測</div>
-<div class="notice">本工具照你提供的規則運算。熱門球、拖牌與「氣動」只會作為加權條件，不代表能預測隨機開獎。另已修正原碼把 weighted_pool 轉成 set 後造成「權重全部失效」的問題。</div>
-<div class="grid" style="margin-top:14px">
-<section class="card"><h2>① 上一期 / 基準開獎號碼</h2><label>輸入 5 個不同號碼</label><input id="lastDraw" value="02 04 09 12 36"><div class="row" style="margin-top:12px"><button onclick="generateRecommendation()">🎯 產生推薦</button><button class="secondary" onclick="randomLastDraw()">🎲 隨機填入</button></div><div class="small" style="margin-top:10px">預設採用你程式中的 2026/08/28：02、04、09、12、36。</div></section>
-<section class="card"><h2>② 推薦結果</h2><div class="small">核心預測 5 碼</div><div id="single5" class="numbers"></div><div class="small" style="margin-top:14px">進階連碰 8 碼</div><div id="base8" class="numbers"></div></section>
-<section class="card full"><h2>③ 立柱縮表</h2><div class="kpis"><div class="kpi"><div class="small">全連碰</div><div class="v">56 注</div></div><div class="kpi"><div class="small">全連碰成本</div><div class="v">$2,800</div></div><div class="kpi"><div class="small">縮表注數</div><div class="v" id="betCount">0 注</div></div><div class="kpi"><div class="small">縮表成本</div><div class="v" id="betCost">$0</div></div></div><div class="row" style="margin-top:14px"><button class="good" onclick="exportCSV()">💾 匯出 CSV 投注單</button><button class="secondary" onclick="generateRecommendation()">🔄 重新運算</button></div><div id="betsWrap"></div></section>
-<section class="card"><h2>④ 對獎 / 回測</h2><label>輸入要比對的 5 個開獎號碼</label><input id="winning" value="02 04 09 12 36"><div class="row" style="margin-top:12px"><button class="warn" onclick="runBacktest()">🏆 開始對獎</button><button class="secondary" onclick="randomWinning()">🎰 隨機開獎</button></div></section>
-<section class="card"><h2>⑤ 回測報告</h2><div id="report" class="report">尚未對獎。</div></section>
+<h1>👑 539 分析大師 V2</h1>
+<div class="sub">統計評分 × 8碼推薦 × Wheeling 縮表 × 覆蓋率驗證 × 歷史回測 × 隨機對照 × 物理資料接口</div>
+<div class="tabs">
+<button class="tab active" onclick="showTab('model',this)">🎯 選號模型</button>
+<button class="tab" onclick="showTab('wheel',this)">⚡ 縮表驗證</button>
+<button class="tab" onclick="showTab('backtest',this)">📊 歷史回測</button>
+<button class="tab" onclick="showTab('physics',this)">🌀 物理模組</button>
+</div>
+
+<div id="model" class="panel active"><div class="grid">
+<section class="card"><h2>① 基準開獎號碼</h2>
+<label>上一期 5 碼</label><input id="lastDraw" value="02 04 09 12 36">
+<div class="row"><button onclick="generate()">產生 8 碼</button><button class="secondary" onclick="randomLast()">隨機填入</button></div>
+<div class="note" style="margin-top:12px">目前採「可解釋權重模型」。每顆球的分數來自：基礎分、熱門號、冷門號、尾數與前後期關聯。它是策略評分，不是下一期中獎機率。</div></section>
+<section class="card"><h2>② 推薦結果</h2><div class="small">8 碼基底</div><div id="base8" class="balls"></div><div class="small">由 8 碼抽出的展示 5 碼</div><div id="single5" class="balls"></div></section>
+<section class="card full"><h2>③ 1～39 號評分</h2><div id="scores"></div></section>
 </div></div>
+
+<div id="wheel" class="panel"><div class="grid">
+<section class="card"><h2>① 縮表設定</h2><label>投注注數</label>
+<select id="wheelSize" onchange="buildWheel()"><option value="8">8 注（400元）</option><option value="12">12 注（600元）</option><option value="16">16 注（800元）</option><option value="20">20 注（1,000元）</option><option value="56">全連碰 56 注（2,800元）</option></select>
+<div class="row"><button onclick="buildWheel()">重新最佳化</button><button class="good" onclick="exportCSV()">匯出 CSV</button></div>
+<div class="note" style="margin-top:12px">V2 不會直接宣稱「保5中4」。系統會枚舉 8 碼中所有 56 種可能開出 5 碼的情況，實際驗證你選的注數能覆蓋多少。</div></section>
+<section class="card"><h2>② 真實覆蓋率</h2><div class="kpis"><div class="kpi"><span class="small">中4以上覆蓋</span><b id="cov4">0%</b></div><div class="kpi"><span class="small">中5覆蓋</span><b id="cov5">0%</b></div><div class="kpi"><span class="small">覆蓋情境</span><b id="covered">0/56</b></div><div class="kpi"><span class="small">成本</span><b id="cost">$0</b></div></div><div id="guarantee" class="report" style="margin-top:10px"></div></section>
+<section class="card full"><h2>③ 投注組合</h2><div id="bets"></div></section>
+</div></div>
+
+<div id="backtest" class="panel"><div class="grid">
+<section class="card"><h2>① 貼上歷史資料</h2>
+<div class="small">每行一期、5 個號碼。例如：<br>02 04 09 12 36<br>01 08 17 23 39</div>
+<textarea id="history" placeholder="每行輸入一期 5 個號碼"></textarea>
+<div class="row"><button onclick="runBacktest()">開始回測</button><button class="secondary" onclick="makeDemoHistory()">產生 100 期隨機測試資料</button></div></section>
+<section class="card"><h2>② 回測摘要</h2><div id="btReport" class="report">尚未執行。</div></section>
+<section class="card full"><h2>③ 模型 vs 隨機對照</h2><div id="comparison" class="note">貼入歷史資料後，系統會用「前一期 → 預測下一期」逐期測試，並以相同 8 碼數量的隨機策略作對照。這比只挑成功案例更能檢查策略是否真的有優勢。</div></section>
+</div></div>
+
+<div id="physics" class="panel"><div class="grid">
+<section class="card"><h2>🌀 物理資料接口</h2>
+<div class="note">這個模組目前預設<strong>停用</strong>。只有取得真實量測資料才建議納入模型，避免用假設值製造假的精準度。</div>
+<label>開獎機編號</label><input id="machineId" placeholder="例如 Machine-A">
+<label>氣流速度（m/s）</label><input id="airSpeed" type="number" step="0.01" placeholder="需要真實量測">
+<label>混球時間（秒）</label><input id="mixTime" type="number" step="0.1" placeholder="需要真實紀錄">
+<div class="row"><button class="secondary" onclick="physicsInfo()">檢查資料完整度</button></div></section>
+<section class="card"><h2>每顆實體球資料</h2>
+<div class="small">格式：球號,重量g,磨損指標,初始位置<br>例如：17,2.83,0.12,A3</div>
+<textarea id="ballPhysics" placeholder="01,重量,磨損,位置&#10;02,重量,磨損,位置"></textarea></section>
+<section class="card full"><h2>物理模組狀態</h2><div id="physicsReport" class="report">未啟用。V2 不會用虛構重量、磨損或流場資料影響選號。</div></section>
+</div></div>
+<div class="footer">※ 本工具用於統計、組合與回測研究。隨機彩券每一組合法號碼在公平開獎下沒有因「熱門」「冷門」而天然提高下一期被抽中的機率。獎金欄位若使用，應以實際官方當期規則為準。</div>
+</div>
+
 <script>
-const HOT=[17,37,24,8,29,32,4,12,19,22], COLD=[5,16,21,25,33], TAILS=[4,7,8,2], DRAG={2:[3,12,22,32],4:[14,24,34,8],9:[19,29,39,17],12:[2,22,32,37],36:[6,16,26,24]};
-let current8=[], currentBets=[];
-function parseNums(v,n){const a=v.split(/[\s,，]+/).filter(Boolean).map(Number);if(a.length!==n)throw Error(`請輸入剛好 ${n} 個號碼`);if(new Set(a).size!==n)throw Error('號碼不能重複');if(a.some(x=>!Number.isInteger(x)||x<1||x>39))throw Error('號碼必須介於 1～39');return a}
-function weighted(items,weights,k){const p=items.map((x,i)=>({x,w:weights[i]})),o=[];for(let s=0;s<k;s++){let total=p.reduce((a,b)=>a+b.w,0),r=Math.random()*total,i=0;for(;i<p.length;i++){r-=p[i].w;if(r<=0)break}i=Math.min(i,p.length-1);o.push(p[i].x);p.splice(i,1)}return o}
-function analyze(last){let dragged=[];last.forEach(b=>{if(DRAG[b])dragged.push(...DRAG[b])});const items=[],weights=[];for(let b=1;b<=39;b++){let w=10;if(dragged.includes(b))w+=12;if(HOT.includes(b))w+=15;if(COLD.includes(b))w-=6;if(TAILS.includes(b%10))w+=8;items.push(b);weights.push(Math.max(1,w))}for(let t=0;t<10000;t++){const r=weighted(items,weights,8).sort((a,b)=>a-b),od=r.filter(x=>x%2).length,big=r.filter(x=>x>=20).length;if(od>=3&&od<=5&&big>=3&&big<=5)return r}return weighted(items,weights,8).sort((a,b)=>a-b)}
-function combos(a,k){const o=[];(function f(s,p){if(p.length===k){o.push([...p]);return}for(let i=s;i<a.length;i++){p.push(a[i]);f(i+1,p);p.pop()}})(0,[]);return o}
-function filter(base){let c1=base.filter(x=>HOT.includes(x)||[3,7].includes(x%10));if(!c1.length)c1=base.slice(0,2);let c2=base.filter(x=>x%2===0&&!c1.includes(x)),c3=base.filter(x=>!c1.includes(x)&&!c2.includes(x));const out=[],seen=new Set();for(const a of c1)for(let i=0;i<c2.length;i++)for(let j=i+1;j<c2.length;j++)for(let k=0;k<c3.length;k++)for(let l=k+1;l<c3.length;l++){const b=[...new Set([a,c2[i],c2[j],c3[k],c3[l]])].sort((x,y)=>x-y);if(b.length===5){const od=b.filter(x=>x%2).length,sum=b.reduce((x,y)=>x+y,0),key=b.join('-');if([2,3].includes(od)&&sum>=70&&sum<=130&&!seen.has(key)){seen.add(key);out.push(b)}}}if(out.length<8){for(const b of combos(base,5)){const od=b.filter(x=>x%2).length,sum=b.reduce((x,y)=>x+y,0),key=b.join('-');if([2,3].includes(od)&&sum>=70&&sum<=130&&!seen.has(key)){seen.add(key);out.push(b);if(out.length>=8)break}}}return out.slice(0,8)}
-function sample(a,k){a=[...a];const o=[];while(o.length<k){o.push(a.splice(Math.floor(Math.random()*a.length),1)[0])}return o}
-function balls(a){return a.map(n=>`<div class="ball">${String(n).padStart(2,'0')}</div>`).join('')}
-function generateRecommendation(){try{const last=parseNums(document.getElementById('lastDraw').value,5);current8=analyze(last);const s=sample(current8,5).sort((a,b)=>a-b);currentBets=filter(current8);single5.innerHTML=balls(s);base8.innerHTML=balls(current8);betCount.textContent=`${currentBets.length} 注`;betCost.textContent=`$${(currentBets.length*50).toLocaleString()}`;let t='<table class="bet-table"><thead><tr><th>注次</th><th colspan="5">號碼</th><th>標籤</th></tr></thead><tbody>';currentBets.forEach((b,i)=>{t+=`<tr><td>第 ${String(i+1).padStart(2,'0')} 注</td>${b.map(n=>`<td>${String(n).padStart(2,'0')}</td>`).join('')}<td><span class="tag">智慧立柱</span></td></tr>`});betsWrap.innerHTML=currentBets.length?t+'</tbody></table>':'<div class="notice" style="margin-top:12px">目前條件無法產生符合規則的注數。</div>';report.textContent='已重新產生推薦，尚未對獎。'}catch(e){alert(e.message)}}
-function runBacktest(){try{if(!currentBets.length)throw Error('請先產生推薦與縮表');const w=parseNums(winning.value,5),c={5:0,4:0,3:0,2:0,1:0,0:0};currentBets.forEach(b=>c[b.filter(x=>w.includes(x)).length]++);const gain=c[5]*8000000+c[4]*20000+c[3]*300+c[2]*50,cost=currentBets.length*50,net=gain-cost;report.innerHTML=`開獎號碼：${w.sort((a,b)=>a-b).map(n=>String(n).padStart(2,'0')).join('、')}\n\n🥇 中5碼：${c[5]} 注\n🥈 中4碼：${c[4]} 注\n🥉 中3碼：${c[3]} 注\n🏅 中2碼：${c[2]} 注\n\n總回收：${gain.toLocaleString()} 元\n投注成本：${cost.toLocaleString()} 元\n<span class="${net>=0?'ok':'bad'}">損益：${net>=0?'+':''}${net.toLocaleString()} 元</span>`}catch(e){alert(e.message)}}
-function randomLastDraw(){const a=sample(Array.from({length:39},(_,i)=>i+1),5).sort((a,b)=>a-b);lastDraw.value=a.map(n=>String(n).padStart(2,'0')).join(' ')}function randomWinning(){const a=sample(Array.from({length:39},(_,i)=>i+1),5).sort((a,b)=>a-b);winning.value=a.map(n=>String(n).padStart(2,'0')).join(' ');runBacktest()}
-function exportCSV(){if(!currentBets.length){alert('目前沒有可匯出的注數');return}const rows=[["注次","球號 1","球號 2","球號 3","球號 4","球號 5","高階玩法標籤"]];currentBets.forEach((b,i)=>rows.push([`第 ${String(i+1).padStart(2,'0')} 注`,...b.map(n=>String(n).padStart(2,'0')),'大數據智慧立柱']));const csv='\uFEFF'+rows.map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(',')).join('\r\n'),blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='539_master_bets.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
-generateRecommendation();
+const HOT=[17,37,24,8,29,32,4,12,19,22], COLD=[5,16,21,25,33], TAILS=[4,7,8,2];
+const DRAG={2:[3,12,22,32],4:[14,24,34,8],9:[19,29,39,17],12:[2,22,32,37],36:[6,16,26,24]};
+let base8=[], wheel=[];
+
+function showTab(id,b){document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');b.classList.add('active')}
+function parse(v,n){let a=v.split(/[\s,，]+/).filter(Boolean).map(Number);if(a.length!==n||new Set(a).size!==n||a.some(x=>x<1||x>39||!Number.isInteger(x)))throw Error(`請輸入 ${n} 個不同的 1～39 號碼`);return a}
+function combos(a,k){let o=[];function r(s,p){if(p.length===k){o.push([...p]);return}for(let i=s;i<a.length;i++){p.push(a[i]);r(i+1,p);p.pop()}}r(0,[]);return o}
+function sample(a,k){a=[...a];let o=[];while(o.length<k){let i=Math.floor(Math.random()*a.length);o.push(a.splice(i,1)[0])}return o}
+function balls(a){return a.map(n=>`<div class=ball>${String(n).padStart(2,'0')}</div>`).join('')}
+function scoreBalls(last){
+ let dragged=[];last.forEach(x=>{if(DRAG[x])dragged.push(...DRAG[x])});
+ return Array.from({length:39},(_,i)=>i+1).map(n=>{
+  let s=10,why=['基礎 +10'];
+  if(dragged.includes(n)){s+=15;why.push('前後期關聯 +15')}
+  if(HOT.includes(n)){s+=15;why.push('熱門 +15')}
+  if(COLD.includes(n)){s-=6;why.push('冷門 -6')}
+  if(TAILS.includes(n%10)){s+=8;why.push('尾數 +8')}
+  return {n,s:Math.max(1,s),why}
+ }).sort((a,b)=>b.s-a.s||a.n-b.n)
+}
+function weighted8(sc){
+ let pool=sc.map(x=>({...x})),out=[];
+ while(out.length<8){let total=pool.reduce((s,x)=>s+x.s,0),r=Math.random()*total,i=0;for(;i<pool.length;i++){r-=pool[i].s;if(r<=0)break}i=Math.min(i,pool.length-1);out.push(pool[i].n);pool.splice(i,1)}
+ let odds=out.filter(x=>x%2).length,bigs=out.filter(x=>x>=20).length;
+ if(odds<3||odds>5||bigs<3||bigs>5)return sc.slice(0,8).map(x=>x.n).sort((a,b)=>a-b);
+ return out.sort((a,b)=>a-b)
+}
+function generate(){
+ try{
+  let last=parse(document.getElementById('lastDraw').value,5),sc=scoreBalls(last);
+  base8=weighted8(sc);document.getElementById('base8').innerHTML=balls(base8);
+  document.getElementById('single5').innerHTML=balls(sample(base8,5).sort((a,b)=>a-b));
+  document.getElementById('scores').innerHTML=`<table><tr><th>排名</th><th>號碼</th><th>分數</th><th>原因</th></tr>${sc.map((x,i)=>`<tr><td>${i+1}</td><td>${String(x.n).padStart(2,'0')}</td><td>${x.s}</td><td>${x.why.join(' / ')}</td></tr>`).join('')}</table>`;
+  buildWheel();
+ }catch(e){alert(e.message)}
+}
+function coverage(selected){
+ let scenarios=combos(base8,5),c4=0,c5=0;
+ scenarios.forEach(s=>{let best=0;selected.forEach(b=>best=Math.max(best,b.filter(x=>s.includes(x)).length));if(best>=4)c4++;if(best===5)c5++});
+ return {c4,c5,total:scenarios.length}
+}
+function optimize(all,n){
+ if(n>=all.length)return [...all];
+ let chosen=[],remaining=[...all],scenarios=combos(base8,5),covered=new Set();
+ while(chosen.length<n&&remaining.length){
+  let bestI=0,bestGain=-1;
+  remaining.forEach((bet,i)=>{
+   let gain=0;scenarios.forEach((s,si)=>{if(!covered.has(si)&&bet.filter(x=>s.includes(x)).length>=4)gain++});
+   if(gain>bestGain){bestGain=gain;bestI=i}
+  });
+  let b=remaining.splice(bestI,1)[0];chosen.push(b);
+  scenarios.forEach((s,si)=>{if(b.filter(x=>s.includes(x)).length>=4)covered.add(si)});
+ }
+ return chosen
+}
+function buildWheel(){
+ if(base8.length!==8)return;
+ let n=Number(document.getElementById('wheelSize').value),all=combos(base8,5);wheel=optimize(all,n);
+ let c=coverage(wheel),pct4=100*c.c4/c.total,pct5=100*c.c5/c.total;
+ document.getElementById('cov4').textContent=pct4.toFixed(1)+'%';document.getElementById('cov5').textContent=pct5.toFixed(1)+'%';document.getElementById('covered').textContent=`${c.c4}/${c.total}`;document.getElementById('cost').textContent='$'+(wheel.length*50).toLocaleString();
+ document.getElementById('guarantee').innerHTML=pct4===100?`<span class=ok>✓ 經 56 種情境逐一驗證：此縮表確實達到「8碼中5時，至少一注中4」的 100% 覆蓋。</span>`:`<span class=warn>目前不是 100% 保證。</span>\n若 8 碼剛好包含全部 5 個開獎號碼，這份 ${wheel.length} 注縮表有 ${c.c4}/56 種情境至少一注中4以上。`;
+ document.getElementById('bets').innerHTML=`<table><tr><th>注次</th><th colspan=5>號碼</th></tr>${wheel.map((b,i)=>`<tr><td>${i+1}</td>${b.map(x=>`<td>${String(x).padStart(2,'0')}</td>`).join('')}</tr>`).join('')}</table>`
+}
+function randomLast(){let a=sample(Array.from({length:39},(_,i)=>i+1),5).sort((a,b)=>a-b);document.getElementById('lastDraw').value=a.map(x=>String(x).padStart(2,'0')).join(' ')}
+function exportCSV(){if(!wheel.length)return alert('請先產生縮表');let rows=[['注次','球1','球2','球3','球4','球5'],...wheel.map((b,i)=>[`第${i+1}注`,...b])];let csv='\uFEFF'+rows.map(r=>r.join(',')).join('\r\n'),blob=new Blob([csv],{type:'text/csv'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='539_V2_bets.csv';a.click()}
+function makeDemoHistory(){let lines=[];for(let i=0;i<100;i++)lines.push(sample(Array.from({length:39},(_,j)=>j+1),5).sort((a,b)=>a-b).map(x=>String(x).padStart(2,'0')).join(' '));document.getElementById('history').value=lines.join('\n')}
+function runBacktest(){
+ try{
+  let lines=document.getElementById('history').value.trim().split(/\n+/).filter(Boolean),draws=lines.map(x=>parse(x,5));if(draws.length<2)throw Error('至少需要 2 期資料');
+  let modelHits=[0,0,0,0,0,0],randomHits=[0,0,0,0,0,0],modelSum=0,randSum=0;
+  for(let i=0;i<draws.length-1;i++){
+   let pred=weighted8(scoreBalls(draws[i])),rnd=sample(Array.from({length:39},(_,j)=>j+1),8),next=draws[i+1];
+   let mh=pred.filter(x=>next.includes(x)).length,rh=rnd.filter(x=>next.includes(x)).length;modelHits[mh]++;randomHits[rh]++;modelSum+=mh;randSum+=rh
+  }
+  let n=draws.length-1;
+  document.getElementById('btReport').textContent=`測試期數：${n}\n模型平均每期 8 碼命中：${(modelSum/n).toFixed(3)} 顆\n隨機 8 碼平均命中：${(randSum/n).toFixed(3)} 顆\n模型中4以上：${modelHits.slice(4).reduce((a,b)=>a+b,0)} 次\n隨機中4以上：${randomHits.slice(4).reduce((a,b)=>a+b,0)} 次`;
+  document.getElementById('comparison').innerHTML=`<table><tr><th>8碼命中顆數</th><th>模型</th><th>隨機對照</th></tr>${[0,1,2,3,4,5].map(k=>`<tr><td>${k}</td><td>${modelHits[k]}</td><td>${randomHits[k]}</td></tr>`).join('')}</table><div class=note style="margin-top:10px">隨機對照每次執行會有波動。正式研究建議使用大量歷史期數，並把隨機基準重複模擬很多次後比較平均值。</div>`;
+ }catch(e){alert(e.message)}
+}
+function physicsInfo(){
+ let machine=document.getElementById('machineId').value.trim(),air=document.getElementById('airSpeed').value,mix=document.getElementById('mixTime').value,rows=document.getElementById('ballPhysics').value.trim().split(/\n+/).filter(Boolean);
+ let valid=rows.filter(r=>{let p=r.split(',');return p.length>=4&&Number(p[0])>=1&&Number(p[0])<=39&&!isNaN(Number(p[1]))&&!isNaN(Number(p[2]))}).length;
+ document.getElementById('physicsReport').textContent=`開獎機編號：${machine||'未填'}\n氣流速度：${air||'未填'}\n混球時間：${mix||'未填'}\n有效球資料：${valid}/39 顆\n\n${machine&&air&&mix&&valid===39?'資料欄位已完整，但仍需要確認量測方法、單位、期別對應與流場資料，才能建立可驗證的物理模型。':'資料不足，因此物理模型維持停用，不影響目前統計模型。'}`
+}
+generate();
 </script></body></html>
