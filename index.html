@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>539 分析大師 V3.2｜歷年資料庫版</title>
+<title>539 分析大師 V4｜關聯網路實驗版</title>
 <style>
 :root{--bg:#08101f;--card:#111c31;--card2:#172641;--line:#2b4167;--txt:#f3f7ff;--muted:#a8b8d3;--blue:#5c8dff;--green:#3bd59b;--gold:#ffc857;--red:#ff6b78}
 *{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#07101e,#0b1730);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft JhengHei",sans-serif}.wrap{max-width:1180px;margin:auto;padding:18px}h1{margin:4px 0 5px;font-size:29px}.sub{color:var(--muted);line-height:1.6}.tabs{display:flex;gap:8px;overflow:auto;padding:15px 0}.tab{white-space:nowrap;background:#182743;color:#cbd8ee}.tab.active{background:var(--blue);color:#fff}.panel{display:none}.panel.active{display:block}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.card{background:rgba(17,28,49,.97);border:1px solid var(--line);border-radius:18px;padding:17px;box-shadow:0 10px 25px #0003}.full{grid-column:1/-1}.card h2{font-size:18px;margin:0 0 12px}.note{background:#111c30;border:1px solid #344d78;border-radius:13px;padding:12px;color:#cad6e9;line-height:1.55;font-size:13px}label{display:block;color:var(--muted);font-size:13px;margin:9px 0 6px}input,textarea,select{width:100%;border:1px solid var(--line);border-radius:11px;background:#0b1528;color:#fff;padding:11px;font-size:15px}textarea{min-height:150px;font-family:Consolas,monospace}.row{display:flex;gap:9px;flex-wrap:wrap;margin-top:10px}button{border:0;border-radius:11px;padding:10px 14px;background:var(--blue);color:#fff;font-weight:750;cursor:pointer}.secondary{background:#273b60}.good{background:#168f67}.gold{background:#a87513}.danger{background:#a93b4c}.balls{display:flex;gap:7px;flex-wrap:wrap;margin:9px 0}.ball{width:43px;height:43px;border-radius:50%;display:grid;place-items:center;background:#f5f7ff;color:#101827;font-weight:900;border:3px solid #b8caff}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.kpi{background:var(--card2);border:1px solid var(--line);border-radius:13px;padding:11px}.kpi b{display:block;font-size:21px;margin-top:3px}.small{font-size:12px;color:var(--muted)}table{width:100%;border-collapse:collapse;margin-top:9px}th,td{padding:9px 6px;border-bottom:1px solid var(--line);text-align:center;font-size:13px}th{color:#b9c8e0}.report{background:#091426;border:1px solid var(--line);border-radius:12px;padding:13px;white-space:pre-wrap;line-height:1.65;min-height:100px}.ok{color:var(--green)}.bad{color:var(--red)}.warn{color:var(--gold)}.bar{height:9px;background:#0a1427;border-radius:9px;overflow:hidden;margin-top:5px}.fill{height:100%;background:var(--blue)}.checkgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.check{background:#152440;border:1px solid var(--line);border-radius:10px;padding:8px;font-size:12px}.disabled{opacity:.55}.footer{color:var(--muted);font-size:12px;line-height:1.6;margin:16px 3px}
@@ -10,8 +10,8 @@
 </style>
 </head>
 <body><div class="wrap">
-<h1>👑 539 分析大師 V3.2｜歷年資料庫版</h1>
-<div class="sub">多年度資料合併 × 日期/期別排序 × 自動去重 × 多時間窗分析 × 固定主力8碼 × Wheeling</div>
+<h1>👑 539 分析大師 V4｜關聯網路實驗版</h1>
+<div class="sub">歷年資料庫 × 號碼共現關聯 × 前後期轉移 × 固定主力8碼 × Walk-forward 驗證 × Wheeling</div>
 <div class="tabs">
 <button class="tab active" onclick="showTab('model',this)">🎯 選號模型</button>
 <button class="tab" onclick="showTab('wheel',this)">⚡ 縮表驗證</button>
@@ -75,7 +75,7 @@
 <textarea id="ballPhysics" placeholder="01,重量,磨損,位置&#10;02,重量,磨損,位置"></textarea></section>
 <section class="card full"><h2>物理模組狀態</h2><div id="physicsReport" class="report">未啟用。V2 不會用虛構重量、磨損或流場資料影響選號。</div></section>
 </div></div>
-<div class="footer">※ V3.2 不會聲稱已自動連線台彩；目前採官方資料下載／查詢後匯入，避免瀏覽器跨網域或網站改版造成『看似更新、其實沒更新』。本工具用於統計、組合與回測研究。隨機彩券每一組合法號碼在公平開獎下沒有因「熱門」「冷門」而天然提高下一期被抽中的機率。獎金欄位若使用，應以實際官方當期規則為準。</div>
+<div class="footer">※ V4 不會聲稱已自動連線台彩；目前採官方資料下載／查詢後匯入，避免瀏覽器跨網域或網站改版造成『看似更新、其實沒更新』。本工具用於統計、組合與回測研究。隨機彩券每一組合法號碼在公平開獎下沒有因「熱門」「冷門」而天然提高下一期被抽中的機率。獎金欄位若使用，應以實際官方當期規則為準。</div>
 </div>
 
 <script>
@@ -295,4 +295,22 @@ function generateV3(){
  }catch(e){alert(e.message)}
 }
 
-</script></body></html>
+
+let V4_ASSOC=null;
+function buildAssoc(draws){const co=Array.from({length:40},()=>Array(40).fill(0)),tr=Array.from({length:40},()=>Array(40).fill(0)),f=Array(40).fill(0);for(let i=0;i<draws.length;i++){let d=draws[i];d.forEach(a=>f[a]++);for(let a=0;a<d.length;a++)for(let b=a+1;b<d.length;b++){co[d[a]][d[b]]++;co[d[b]][d[a]]++;}if(i<draws.length-1)d.forEach(a=>draws[i+1].forEach(b=>tr[a][b]++));}return{co,tr,f};}
+function v4Score(draws,last){const N=draws.length,assoc=buildAssoc(draws),fAll=countFreq(draws),f20=countFreq(draws.slice(-20)),f50=countFreq(draws.slice(-50)),f100=countFreq(draws.slice(-100)),f300=countFreq(draws.slice(-300));const miss=Array(40).fill(0);for(let n=1;n<=39;n++){let g=0;for(let i=N-1;i>=0;i--){if(draws[i].includes(n))break;g++;}miss[n]=g;}function arr(f,k){let a=[0];for(let n=1;n<=39;n++)a[n]=f[n]/Math.max(1,Math.min(k,N));return a}let a20=arr(f20,20),a50=arr(f50,50),a100=arr(f100,100),a300=arr(f300,300),aAll=[0];for(let n=1;n<=39;n++)aAll[n]=fAll[n]/N;function z(v,a){let x=a.slice(1),m=x.reduce((p,q)=>p+q,0)/x.length,sd=Math.sqrt(x.reduce((s,q)=>s+(q-m)*(q-m),0)/x.length)||1;return(v-m)/sd;}let out=[];for(let n=1;n<=39;n++){let co=0,tr=0;last.forEach(b=>{if(b!==n){co+=assoc.co[b][n]/Math.max(1,assoc.f[b]);tr+=assoc.tr[b][n]/Math.max(1,assoc.f[b]);}});let s=11*z(a20[n],a20)+9*z(a50[n],a50)+8*z(a100[n],a100)+6*z(a300[n],a300)+5*z(aAll[n],aAll)+18*co+14*tr+Math.min(miss[n],20)*0.10;out.push({n,s});}return out.sort((a,b)=>b.s-a.s||a.n-b.n);}
+function runAssociationLab(){if(!V3_DRAWS||V3_DRAWS.length<20){document.getElementById('v4AssocOut').innerHTML='<span class="bad">請先匯入至少 20 期歷史資料。</span>';return;}V4_ASSOC=buildAssoc(V3_DRAWS);let p=[];for(let a=1;a<=39;a++)for(let b=a+1;b<=39;b++)p.push({a,b,c:V4_ASSOC.co[a][b]});p.sort((x,y)=>y.c-x.c||x.a-y.a||x.b-y.b);let t=p.slice(0,15);document.getElementById('v4pair').textContent=String(t[0].a).padStart(2,'0')+' + '+String(t[0].b).padStart(2,'0');document.getElementById('v4paircount').textContent=t[0].c;document.getElementById('v4AssocOut').innerHTML='<b>歷史上最常同一期出現的 15 組：</b><br><br>'+t.map((x,i)=>(i+1)+'. '+String(x.a).padStart(2,'0')+' + '+String(x.b).padStart(2,'0')+'　'+x.c+' 次').join('<br>')+'<br><br><span class="small">共現高不代表下一期必然一起出現。</span>';}
+function calcV4Main8(){if(!V3_DRAWS||V3_DRAWS.length<20){document.getElementById('v4main8').innerHTML='<span class="bad">請先匯入歷史資料。</span>';return;}let last=V3_DRAWS[V3_DRAWS.length-1],r=v4Score(V3_DRAWS,last),top=r.slice(0,8),core=top.slice(0,5);document.getElementById('v4main8').innerHTML='<b>V4 固定主力 8 碼</b><div style="margin:10px 0;font-size:24px;font-weight:800">'+top.map(x=>String(x.n).padStart(2,'0')).join('　')+'</div><b>固定核心 5 碼</b><div style="margin-top:8px;font-size:20px">'+core.map(x=>String(x.n).padStart(2,'0')).join('　')+'</div><br><span class="small">這是統計排序，不是中獎保證。</span>';}
+function runWalkForward(){if(!V3_DRAWS||V3_DRAWS.length<80){document.getElementById('v4BacktestOut').innerHTML='<span class="bad">至少需要 80 期資料。</span>';return;}let want=Number(document.getElementById('v4BackN').value||300),end=V3_DRAWS.length,start=Math.max(60,end-want),cnt=[0,0,0,0,0,0],sum=0,total=0;for(let i=start;i<end;i++){let train=V3_DRAWS.slice(0,i),pred=v4Score(train,train[train.length-1]).slice(0,8).map(x=>x.n),actual=V3_DRAWS[i],hit=actual.filter(n=>pred.includes(n)).length;cnt[hit]++;sum+=hit;total++;}let avg=sum/total,rand=40/39,diff=avg-rand,p=k=>(cnt[k]/total*100).toFixed(1)+'%';document.getElementById('v4testn').textContent=total;document.getElementById('v4avg').textContent=avg.toFixed(3)+' 顆';let v=Math.abs(diff)<0.10?'目前與隨機理論平均非常接近，尚看不出明顯優勢。':diff>0?'目前高於隨機理論平均，但仍需要更多樣本確認。':'目前低於隨機理論平均。';document.getElementById('v4BacktestOut').innerHTML='<b>Walk-forward 驗證 '+total+' 期</b><br><br>平均命中：<b>'+avg.toFixed(3)+' 顆</b><br>隨機選 8 碼理論平均：約 <b>'+rand.toFixed(3)+' 顆</b><br>差異：<b>'+(diff>=0?'+':'')+diff.toFixed(3)+' 顆</b><br><br>0中：'+p(0)+'　1中：'+p(1)+'　2中：'+p(2)+'<br>3中：'+p(3)+'　4中：'+p(4)+'　5中：'+p(5)+'<br><br><b>判讀：</b>'+v+'<br><br><span class="small">每一期都只使用之前的資料，沒有使用未來期數。</span>';}
+
+</script>
+<section class="card" style="margin-top:18px">
+<h2>④ V4 關聯網路實驗室</h2>
+<p class="small">分析哪些號碼常在同一期一起出現，以及上一期出現後，下一期哪些號碼較常跟著出現。這是歷史統計，不代表下一期一定更容易開。</p>
+<div class="row" style="gap:10px;flex-wrap:wrap"><button class="good" onclick="runAssociationLab()">建立號碼關聯網路</button><button class="secondary" onclick="runWalkForward()">跑歷史驗證</button></div>
+<div class="kpis" style="margin-top:12px"><div class="kpi"><span class="small">最強共現組合</span><b id="v4pair">—</b></div><div class="kpi"><span class="small">共現次數</span><b id="v4paircount">—</b></div><div class="kpi"><span class="small">驗證期數</span><b id="v4testn">0</b></div><div class="kpi"><span class="small">平均命中</span><b id="v4avg">—</b></div></div>
+<div id="v4AssocOut" class="result" style="margin-top:12px">尚未建立關聯網路。</div>
+</section>
+<section class="card" style="margin-top:18px"><h2>⑤ 關聯加權主力 8 碼</h2><p class="small">把多時間窗分數、同期共現、前後期轉移一起評分；同一份資料會得到同一組結果。</p><button class="good" onclick="calcV4Main8()">計算 V4 固定主力 8 碼</button><div id="v4main8" class="result" style="margin-top:12px">尚未計算。</div></section>
+<section class="card" style="margin-top:18px"><h2>⑥ Walk-forward 歷史驗證</h2><p class="small">每一期只使用當時以前的資料產生 8 碼，再拿下一期真實結果驗證，避免偷看未來。</p><div class="row" style="gap:10px;flex-wrap:wrap"><label>驗證最近 <select id="v4BackN"><option value="100">100期</option><option value="300" selected>300期</option><option value="500">500期</option><option value="1000">1000期</option></select></label><button class="secondary" onclick="runWalkForward()">開始驗證</button></div><div id="v4BacktestOut" class="result" style="margin-top:12px">尚未驗證。</div></section>
+</body></html>
