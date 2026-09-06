@@ -24,7 +24,7 @@
 <div class="note">V3 不再把熱門／冷門號寫死。請貼入或匯入歷史開獎資料，每行一期 5 碼，日期由舊到新排列。系統會從這批資料重新計算近20／50／100期頻率、全期頻率、遺漏期數、尾數與前後期關聯。若沒有匯入資料，V3 不會假裝自己已分析歷史資料。</div>
 <label>歷史資料（每行一期 5 碼）</label>
 <textarea id="v3history" placeholder="例如：&#10;01 08 17 23 39&#10;02 04 09 12 36"></textarea>
-<div class="row"><button class="good" onclick="loadV3History()">載入文字並分析</button><button class="secondary" onclick="document.getElementById('historyFile').click()">📚 一次匯入多年度 TXT/CSV</button><input id="historyFile" type="file" accept=".txt,.csv" multiple style="display:none" onchange="importHistoryFiles(this)"></div>
+<div class="row"><button class="good" onclick="loadV3History()">追加文字並分析</button><button class="secondary" onclick="document.getElementById('historyFile').click()">📚 一次匯入多年度 TXT/CSV</button><input id="historyFile" type="file" accept=".txt,.csv" multiple style="display:none" onchange="importHistoryFiles(this)"></div>
 <div class="kpis" style="margin-top:10px">
 <div class="kpi"><span class="small">有效期數</span><b id="v3count">0</b></div>
 <div class="kpi"><span class="small">資料範圍</span><b id="v3range" style="font-size:14px">—</b></div>
@@ -226,10 +226,40 @@ function importHistoryFiles(input){
  }).catch(e=>alert('匯入失敗：'+e.message));
 }
 function loadV3History(){
- let text=document.getElementById('v3history').value,all=[],rejected=0;
- text.split(/\n+/).forEach((line,i)=>{let rec=parseRecordLine(line,'貼上文字',i+1);if(rec)all.push(rec);else if(line.trim())rejected++});
- let merged=mergeRecords(all);V3_RECORDS=merged.records;V3_DRAWS=V3_RECORDS.map(r=>r.nums);
- updateV32Status(merged.dupes,rejected,['貼上文字']);
+  let text=document.getElementById('v3history').value,added=[],rejected=0;
+  text.split(/\n+/).forEach((line,i)=>{
+    let rec=parseRecordLine(line,'手動追加',i+1);
+    if(rec)added.push(rec); else if(line.trim())rejected++;
+  });
+  if(!added.length){alert('沒有辨識到可加入的資料。每行請輸入 5 個不同的 1～39 號碼。');return;}
+
+  // 修正：手動輸入改為追加，不再覆蓋已匯入的年度歷史資料。
+  let existing=[...V3_RECORDS];
+  let accepted=[], dupes=0;
+
+  // 有期別/日期時優先用它判斷重複；純 5 碼手動資料則避免和既有完全相同的一期重複加入。
+  let periodKeys=new Set(existing.filter(r=>r.period).map(r=>'P:'+r.period));
+  let dateKeys=new Set(existing.filter(r=>r.date).map(r=>'D:'+r.date));
+  let numKeys=new Set(existing.map(r=>r.nums.join('-')));
+
+  added.forEach((r,i)=>{
+    let duplicate=(r.period&&periodKeys.has('P:'+r.period)) ||
+                  (r.date&&dateKeys.has('D:'+r.date)) ||
+                  (!r.period&&!r.date&&numKeys.has(r.nums.join('-')));
+    if(duplicate){dupes++;return;}
+    accepted.push({...r,lineNo:existing.length+i+1});
+    if(r.period)periodKeys.add('P:'+r.period);
+    if(r.date)dateKeys.add('D:'+r.date);
+    numKeys.add(r.nums.join('-'));
+  });
+
+  V3_RECORDS=[...existing,...accepted];
+  V3_DRAWS=V3_RECORDS.map(r=>r.nums);
+  let sources=[...new Set(V3_RECORDS.map(r=>r.source).filter(Boolean))];
+  updateV32Status(dupes,rejected,sources);
+
+  document.getElementById('dataStatus').innerHTML +=
+    `\n\n<span class="ok">＋ 本次手動追加：${accepted.length} 期；目前合計：${V3_DRAWS.length} 期。</span>`;
 }
 function updateV32Status(dupes,rejected,sources){
  let d=V3_DRAWS, recs=V3_RECORDS;
