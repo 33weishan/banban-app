@@ -1,89 +1,45 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RELX 悅刻－香氛精油</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "PingFang TC",
-                   "Microsoft JhengHei", Arial, sans-serif;
-      background: #ffffff;
-      color: #111;
-    }
-    .wrap {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 16px 8px 30px;
-    }
-    h1 {
-      text-align: center;
-      margin: 8px 0 8px;
-      font-size: 32px;
-    }
-    .note {
-      text-align: center;
-      margin: 0 0 14px;
-      font-size: 18px;
-      font-weight: 600;
-    }
-    .stock {
-      width: 100%;
-      height: 1500px;
-      border: 0;
-      display: block;
-      background: #fff;
-    }
-    .divider {
-      height: 1px;
-      background: #ddd;
-      margin: 20px 0;
-    }
-    .form-title {
-      text-align: center;
-      font-size: 28px;
-      margin: 0 0 12px;
-    }
-    .form {
-      width: 100%;
-      height: 2600px;
-      border: 0;
-      display: block;
-      background: #fff;
-    }
-    @media (max-width: 600px) {
-      .wrap {
-        padding: 10px 0 24px;
-      }
-      h1 {
-        font-size: 30px;
-      }
-      .note {
-        padding: 0 12px;
-        font-size: 17px;
-      }
-      .stock {
-        height: 1550px;
-      }
-      .form {
-        height: 2800px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>即時庫存與下單</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: white;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", Arial, sans-serif;
+  }
+  h1 {
+    text-align: center;
+    margin: 24px 0 12px;
+    font-size: 34px;
+  }
+  .stock {
+    display: block;
+    width: 100%;
+    height: 1650px;
+    border: 0;
+  }
+  .form {
+    display: block;
+    width: 100%;
+    height: 3000px;
+    border: 0;
+  }
+  .section {
+    text-align: center;
+    font-size: 28px;
+    margin: 24px 0 8px;
+  }
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <h1>即時庫存</h1>
-    <div class="note">下單前請先確認庫存</div>
+  <h1>即時庫存</h1>
+  <iframe class="stock" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vSs95HL2x2rqMQvpLhgCKHwEXEae6haIm8aFaA5zq13VYu6GbDpzbx07Z4as_AkMg/pubhtml?gid=181370413&single=true&widget=true&headers=false"></iframe>
 
-    <iframe class="stock" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vSs95HL2x2rqMQvpLhgCKHwEXEae6haIm8aFaA5zq13VYu6GbDpzbx07Z4as_AkMg/pubhtml?gid=181370413&single=true&widget=true&headers=false"></iframe>
-
-    <div class="divider"></div>
-
-    <h2 class="form-title">開始下單</h2>
-    <iframe class="form" src="https://docs.google.com/forms/d/e/1FAIpQLSfoZYq2nXfFKhwiHBlUU0h7UppTS8_FUVOUH3VcIK_p3xMrWg/viewform?embedded=true" loading="lazy">載入中…</iframe>
-  </div>
+  <h2 class="section">開始下單</h2>
+  <iframe class="form" src="https://docs.google.com/forms/d/e/1FAIpQLSfoZYq2nXfFKhwiHBlUU0h7UppTS8_FUVOUH3VcIK_p3xMrWg/viewform?embedded=true">載入中…</iframe>
 </body>
 </html>
